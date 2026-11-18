@@ -18,7 +18,7 @@ docker compose up -d
 ./mvnw spring-boot:run
 ```
 
-Abre http://localhost:8080
+PostgreSQL local queda en el puerto `55433`. Abre http://localhost:8080
 
 ### Usuarios demo
 
