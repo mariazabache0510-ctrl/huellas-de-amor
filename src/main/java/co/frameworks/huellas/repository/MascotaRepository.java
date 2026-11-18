@@ -31,7 +31,7 @@ public interface MascotaRepository extends JpaRepository<Mascota, Long> {
 
     @Query("""
             SELECT DISTINCT m.raza FROM Mascota m
-            WHERE m.raza IS NOT NULL AND TRIM(m.raza) <> ''
+            WHERE m.raza IS NOT NULL AND m.raza <> ''
             ORDER BY m.raza ASC
             """)
     List<String> findRazasDistintas();
