@@ -6,9 +6,11 @@
 <section class="section">
     <div class="container">
         <h1 class="section-title">Gestión de adopciones</h1>
+        <p class="section-lead">Revisa, aprueba o rechaza solicitudes. Esta vista también vive dentro del panel de administración.</p>
         <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
         <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
-        <div class="panel table-wrap">
+
+        <div class="panel table-wrap" th:if="${!#lists.isEmpty(adopciones)}">
             <table>
                 <thead>
                 <tr>
@@ -37,7 +39,14 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="empty-state" th:if="${#lists.isEmpty(adopciones)}">
+            <h3>Aún no hay registros</h3>
+            <p>Cuando existan solicitudes de adopción aparecerán aquí con estado y acciones.</p>
+            <a class="btn btn-secondary" th:href="@{/admin(tab='adopciones')}">Ir al panel admin</a>
+        </div>
     </div>
 </section>
+<script th:src="@{/js/app.js}"></script>
 </body>
 </html>

@@ -49,7 +49,7 @@ public class AdopcionController {
         } catch (NegocioException ex) {
             ra.addFlashAttribute("error", ex.getMessage());
         }
-        return "redirect:/adopciones/gestionar";
+        return redirectGestion(auth);
     }
 
     @PostMapping("/gestionar/{id}/rechazar")
@@ -63,6 +63,12 @@ public class AdopcionController {
         } catch (NegocioException ex) {
             ra.addFlashAttribute("error", ex.getMessage());
         }
-        return "redirect:/adopciones/gestionar";
+        return redirectGestion(auth);
+    }
+
+    private String redirectGestion(Authentication auth) {
+        boolean admin = auth.getAuthorities().stream()
+                .anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+        return admin ? "redirect:/admin?tab=adopciones" : "redirect:/voluntario?tab=solicitudes";
     }
 }

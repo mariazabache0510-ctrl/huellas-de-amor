@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Cómo adoptar')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<section class="section">
+    <div class="container narrow">
+        <p class="eyebrow">Guía clara</p>
+        <h1 class="section-title">Cómo adoptar en Huellas de Amor</h1>
+        <p class="section-lead">Puedes conocer a las mascotas sin cuenta. Solo te pedimos registrarte cuando quieras enviar una solicitud formal.</p>
+
+        <div class="panel reveal">
+            <h2>1. Explora sin presión</h2>
+            <p>Entra al catálogo, filtra por especie, raza o edad y abre el detalle de cada animal: historia, salud y refugio.</p>
+        </div>
+        <div class="panel reveal">
+            <h2>2. Crea tu perfil de adoptante</h2>
+            <p>Necesitamos datos reales (correo válido, vivienda y motivación) para proteger a las mascotas y contactarte.</p>
+        </div>
+        <div class="panel reveal">
+            <h2>3. Experiencia con mascotas</h2>
+            <p>Si marcas que <strong>sí</strong> tienes experiencia, agilizamos la revisión de tu solicitud.</p>
+            <p>Si marcas que <strong>no</strong>, no te bloqueamos: te damos esta guía y el voluntario te orientará con tips de adaptación, alimentación y primeros días en casa.</p>
+            <ul class="trust-list">
+                <li>Prepara un rincón seguro (cama, agua, comedero).</li>
+                <li>Agenda control veterinario en la primera semana.</li>
+                <li>Introduce rutinas cortas de paseo o juego.</li>
+                <li>Pide acompañamiento al refugio si tienes dudas.</li>
+            </ul>
+        </div>
+        <div class="panel reveal">
+            <h2>4. Solicitud y seguimiento</h2>
+            <p>Un voluntario revisa tu solicitud. Si se aprueba, coordinamos entrega y visitas de seguimiento para asegurar el bienestar del animal.</p>
+        </div>
+
+        <div class="actions" style="margin-top:1.5rem">
+            <a class="btn btn-amber" th:href="@{/mascotas/catalogo}">Ver mascotas</a>
+            <a class="btn btn-primary" th:href="@{/registro}">Crear cuenta</a>
+        </div>
+    </div>
+</section>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Panel adoptante')}"></head>
+<head th:replace="~{fragments/layout :: head('Mi panel')}"></head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 <section class="section">
@@ -11,21 +11,27 @@
         <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
         <h2 class="section-title" style="font-size:1.8rem">Disponibles para ti</h2>
-        <div class="grid-cards stagger">
-            <article class="card" th:each="m : ${disponibles}">
-                <div class="card-media"><img th:src="${m.fotoUrl}" th:alt="${m.nombre}"></div>
+        <div class="grid-cards stagger" th:if="${!#lists.isEmpty(disponibles)}">
+            <article class="card pet-card" th:each="m : ${disponibles}">
+                <div class="card-media">
+                    <img th:src="${m.fotoUrl}" th:alt="${m.nombre}" onerror="this.src='/img/logo.jpg'">
+                    <span class="badge floating-badge" th:text="${m.especieNombre}"></span>
+                </div>
                 <div class="card-body">
-                    <span class="badge" th:text="${m.especieNombre}"></span>
                     <h3 th:text="${m.nombre}"></h3>
-                    <p class="meta" th:text="${m.refugioNombre}"></p>
+                    <p class="meta" th:text="${m.raza} + ' · ' + ${m.edad} + ' años · ' + ${m.refugioNombre}"></p>
                     <a class="btn btn-primary" th:href="@{/mascotas/detalle/{id}(id=${m.id})}">Ver detalle</a>
                 </div>
             </article>
         </div>
+        <div class="empty-state" th:if="${#lists.isEmpty(disponibles)}">
+            <h3>No hay mascotas disponibles ahora</h3>
+            <p>Vuelve pronto o revisa el catálogo público.</p>
+        </div>
 
         <div class="panel" style="margin-top:2rem">
             <h2>Historial de adopciones</h2>
-            <div class="table-wrap">
+            <div class="table-wrap" th:if="${!#lists.isEmpty(historial)}">
                 <table>
                     <thead><tr><th>Mascota</th><th>Fecha</th><th>Estado</th><th>Observaciones</th></tr></thead>
                     <tbody>
@@ -38,9 +44,30 @@
                     </tbody>
                 </table>
             </div>
+            <div class="empty-state" th:if="${#lists.isEmpty(historial)}">
+                <h3>Aún no has enviado solicitudes</h3>
+                <p>Cuando solicites una adopción, verás aquí el estado y el acompañamiento.</p>
+            </div>
+        </div>
+
+        <div class="panel" style="margin-top:1.2rem" th:if="${!#lists.isEmpty(seguimientos)}">
+            <h2>Seguimientos</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Mascota</th><th>Fecha</th><th>Notas</th></tr></thead>
+                    <tbody>
+                    <tr th:each="s : ${seguimientos}">
+                        <td th:text="${s.mascotaNombre}"></td>
+                        <td th:text="${s.fechaVisita}"></td>
+                        <td th:text="${s.comentarios}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </section>
+<div th:replace="~{fragments/layout :: footer}"></div>
 <script th:src="@{/js/app.js}"></script>
 </body>
 </html>

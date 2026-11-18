@@ -9,10 +9,10 @@
     <div class="hero-overlay"></div>
     <div class="container hero-content">
         <h1 class="hero-brand">Huellas de Amor</h1>
-        <p class="hero-copy">Centralizamos adopciones responsables en Villavicencio: mascotas, refugios, solicitudes y seguimiento postadopción en un solo lugar.</p>
+        <p class="hero-copy">Adopción responsable en Villavicencio: conoce a cada mascota, visita nuestros refugios y da el paso cuando estés listo.</p>
         <div class="cta-row">
             <a class="btn btn-amber" th:href="@{/mascotas/catalogo}">Ver mascotas disponibles</a>
-            <a class="btn btn-secondary" th:href="@{/registro}">Quiero adoptar</a>
+            <a class="btn btn-secondary" th:href="@{/como-adoptar}">Cómo adoptar</a>
         </div>
     </div>
 </section>
@@ -20,19 +20,72 @@
 <section class="section">
     <div class="container">
         <h2 class="section-title">Compañeros esperando hogar</h2>
-        <p class="section-lead" th:text="'Hay ' + ${totalDisponibles} + ' mascotas disponibles ahora mismo. Explora, conoce su historia y da el primer paso.'"></p>
+        <p class="section-lead" th:text="'Hay ' + ${totalDisponibles} + ' mascotas disponibles. Mira su edad, raza e historia; solo necesitas cuenta para solicitar la adopción.'"></p>
         <div class="grid-cards stagger">
-            <article class="card" th:each="m : ${mascotasDestacadas}">
+            <article class="card pet-card" th:each="m : ${mascotasDestacadas}">
                 <div class="card-media">
-                    <img th:src="${m.fotoUrl}" th:alt="${m.nombre}">
+                    <img th:src="${m.fotoUrl}" th:alt="${m.nombre}" onerror="this.src='/img/logo.jpg'">
+                    <span class="badge floating-badge" th:text="${m.especieNombre}">Perro</span>
                 </div>
                 <div class="card-body">
-                    <span class="badge" th:text="${m.especieNombre}">Perro</span>
                     <h3 th:text="${m.nombre}">Max</h3>
-                    <p class="meta" th:text="${m.raza} + ' · ' + ${m.refugioNombre}"></p>
-                    <a class="btn btn-primary" th:href="@{/mascotas/detalle/{id}(id=${m.id})}">Conocer</a>
+                    <p class="meta" th:text="${m.raza} + ' · ' + ${m.edad} + ' años · ' + ${m.refugioNombre}"></p>
+                    <a class="btn btn-primary" th:href="@{/mascotas/detalle/{id}(id=${m.id})}">Ver detalle</a>
                 </div>
             </article>
+        </div>
+        <div class="actions" style="margin-top:1.5rem">
+            <a class="btn btn-secondary" th:href="@{/mascotas/catalogo}">Ver catálogo completo</a>
+        </div>
+    </div>
+</section>
+
+<section class="section section-alt" id="refugios">
+    <div class="container">
+        <h2 class="section-title">Refugios aliados</h2>
+        <p class="section-lead">Espacios reales en Villavicencio donde cuidamos y preparamos a cada animal para su nuevo hogar.</p>
+        <div class="grid-cards stagger">
+            <article class="card" th:each="r : ${refugios}">
+                <div class="card-body">
+                    <span class="badge badge-sky">Refugio</span>
+                    <h3 th:text="${r.nombre}"></h3>
+                    <p class="meta" th:text="${r.direccion}"></p>
+                    <p th:text="${r.descripcion}"></p>
+                    <p class="meta" th:text="${r.contacto} + ' · ' + ${r.telefono}"></p>
+                </div>
+            </article>
+        </div>
+        <div class="map-shell reveal">
+            <h3>Mapa de Villavicencio</h3>
+            <p class="meta">Ubicación de referencia de nuestros puntos de adopción.</p>
+            <iframe title="Mapa Villavicencio"
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=-73.68%2C4.10%2C-73.58%2C4.18&amp;layer=mapnik&amp;marker=4.142%2C-73.626"
+                    loading="lazy"></iframe>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container split trust-split">
+        <div class="panel reveal">
+            <h2 class="section-title" style="font-size:1.8rem">Por qué confiar en nosotros</h2>
+            <ul class="trust-list">
+                <li>Proceso claro: conocer → solicitar → acompañamiento.</li>
+                <li>Seguimiento postadopción con voluntarios locales.</li>
+                <li>Datos protegidos y roles con Spring Security.</li>
+                <li>Transparencia de salud, edad y refugio de cada mascota.</li>
+            </ul>
+            <a class="btn btn-primary" th:href="@{/registro}">Crear cuenta de adoptante</a>
+        </div>
+        <div class="panel reveal">
+            <h2 class="section-title" style="font-size:1.8rem">Pasos para adoptar</h2>
+            <ol class="steps">
+                <li>Explora el catálogo sin registrarte.</li>
+                <li>Revisa detalle, edad, raza y salud.</li>
+                <li>Crea tu cuenta solo cuando quieras solicitar.</li>
+                <li>Un voluntario valida y te acompaña.</li>
+            </ol>
+            <a class="auth-link" th:href="@{/como-adoptar}">Ver guía completa →</a>
         </div>
     </div>
 </section>

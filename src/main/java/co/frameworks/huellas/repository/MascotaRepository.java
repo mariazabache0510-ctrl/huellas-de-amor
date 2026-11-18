@@ -13,7 +13,7 @@ public interface MascotaRepository extends JpaRepository<Mascota, Long> {
     List<Mascota> findByEstado(EstadoMascota estado);
 
     @Query("""
-            SELECT m FROM Mascota m
+            SELECT DISTINCT m FROM Mascota m
             JOIN FETCH m.especie e
             JOIN FETCH m.refugio r
             WHERE m.estado = :estado
@@ -22,27 +22,16 @@ public interface MascotaRepository extends JpaRepository<Mascota, Long> {
     List<Mascota> findDisponiblesConDetalle(@Param("estado") EstadoMascota estado);
 
     @Query("""
-            SELECT m FROM Mascota m
+            SELECT DISTINCT m FROM Mascota m
             JOIN FETCH m.especie e
             JOIN FETCH m.refugio r
-            WHERE (:estado IS NULL OR m.estado = :estado)
-              AND (:refugioId IS NULL OR r.id = :refugioId)
-              AND (:especieId IS NULL OR e.id = :especieId)
-              AND (:raza IS NULL OR LOWER(m.raza) LIKE LOWER(CONCAT('%', :raza, '%')))
-              AND (:edadMin IS NULL OR m.edad >= :edadMin)
-              AND (:edadMax IS NULL OR m.edad <= :edadMax)
             ORDER BY m.nombre ASC
             """)
-    List<Mascota> buscarConFiltros(@Param("estado") EstadoMascota estado,
-                                   @Param("refugioId") Long refugioId,
-                                   @Param("especieId") Long especieId,
-                                   @Param("raza") String raza,
-                                   @Param("edadMin") Integer edadMin,
-                                   @Param("edadMax") Integer edadMax);
+    List<Mascota> findAllConDetalle();
 
     @Query("""
             SELECT DISTINCT m.raza FROM Mascota m
-            WHERE m.raza IS NOT NULL AND m.raza <> ''
+            WHERE m.raza IS NOT NULL AND TRIM(m.raza) <> ''
             ORDER BY m.raza ASC
             """)
     List<String> findRazasDistintas();
@@ -70,4 +59,12 @@ public interface MascotaRepository extends JpaRepository<Mascota, Long> {
             ORDER BY r.nombre
             """)
     List<Object[]> contarDisponiblesPorRefugio();
+
+    @Query("""
+            SELECT m.estado, COUNT(m)
+            FROM Mascota m
+            GROUP BY m.estado
+            ORDER BY m.estado
+            """)
+    List<Object[]> contarPorEstado();
 }

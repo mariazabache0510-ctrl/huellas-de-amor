@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/layout :: head('Refugios')}"></head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 <section class="section">
     <div class="container">
-        <div class="actions" style="justify-content:space-between;margin-bottom:1rem">
-            <h1 class="section-title" style="margin:0">Refugios</h1>
-            <a class="btn btn-primary" th:href="@{/refugios/nuevo}">Nuevo refugio</a>
+        <div class="actions" style="justify-content:space-between;margin-bottom:1rem;align-items:center">
+            <div>
+                <h1 class="section-title" style="margin:0">Refugios</h1>
+                <p class="section-lead" style="margin:0.4rem 0 0">Puntos de acogida en Villavicencio.</p>
+            </div>
+            <a sec:authorize="hasAnyRole('VOLUNTARIO','ADMIN')" class="btn btn-primary" th:href="@{/refugios/nuevo}">Nuevo refugio</a>
         </div>
         <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
         <div class="grid-cards stagger">
@@ -18,7 +22,7 @@
                     <p class="meta" th:text="${r.direccion}"></p>
                     <p th:text="${r.descripcion}"></p>
                     <p class="meta" th:text="${r.contacto} + ' · ' + ${r.telefono}"></p>
-                    <div class="actions">
+                    <div class="actions" sec:authorize="hasAnyRole('VOLUNTARIO','ADMIN')">
                         <a class="btn btn-secondary" th:href="@{/refugios/{id}/editar(id=${r.id})}">Editar</a>
                         <form th:action="@{/refugios/{id}/eliminar(id=${r.id})}" method="post">
                             <button class="btn btn-danger" type="submit">Eliminar</button>
@@ -26,6 +30,12 @@
                     </div>
                 </div>
             </article>
+        </div>
+        <div class="map-shell reveal" style="margin-top:1.5rem">
+            <h3>Mapa de referencia</h3>
+            <iframe title="Mapa Villavicencio"
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=-73.68%2C4.10%2C-73.58%2C4.18&amp;layer=mapnik&amp;marker=4.142%2C-73.626"
+                    loading="lazy"></iframe>
         </div>
     </div>
 </section>

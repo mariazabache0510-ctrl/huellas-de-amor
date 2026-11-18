@@ -1,11 +1,13 @@
 package co.frameworks.huellas.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -28,6 +30,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleGeneral(Exception ex, Model model) {
+        log.error("Error no controlado", ex);
         model.addAttribute("titulo", "Error inesperado");
         model.addAttribute("mensaje", "Ocurrió un problema al procesar la solicitud. Intenta de nuevo.");
         return "error/general";

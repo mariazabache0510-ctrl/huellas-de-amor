@@ -3,7 +3,10 @@
 <head th:fragment="head(title)">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Huellas de Amor — adopción responsable de mascotas en Villavicencio">
     <title th:text="${title} + ' · Huellas de Amor'">Huellas de Amor</title>
+    <link rel="icon" type="image/jpeg" th:href="@{/img/favicon.jpg}">
+    <link rel="apple-touch-icon" th:href="@{/img/logo.jpg}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
@@ -11,8 +14,18 @@
 </head>
 <body>
 <footer th:fragment="footer" class="footer">
-    <div class="container">
-        <strong>Huellas de Amor</strong> — Sistema de adopción de mascotas · Villavicencio
+    <div class="container footer-grid">
+        <div>
+            <strong>Huellas de Amor</strong>
+            <p>Adopción responsable en Villavicencio · Meta, Colombia.</p>
+        </div>
+        <div class="footer-links">
+            <a th:href="@{/mascotas/catalogo}">Mascotas</a>
+            <a th:href="@{/refugios}">Refugios</a>
+            <a th:href="@{/como-adoptar}">Cómo adoptar</a>
+            <a th:href="@{/terminos}">Términos</a>
+            <a th:href="@{/privacidad}">Privacidad</a>
+        </div>
     </div>
 </footer>
 </body>

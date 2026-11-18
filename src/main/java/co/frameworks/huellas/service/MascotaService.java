@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -46,9 +47,19 @@ public class MascotaService {
                                    String raza,
                                    Integer edadMin,
                                    Integer edadMax) {
-        String razaFiltro = (raza == null || raza.isBlank()) ? null : raza.trim();
-        return mascotaRepository.buscarConFiltros(estado, refugioId, especieId, razaFiltro, edadMin, edadMax)
-                .stream()
+        String razaFiltro = (raza == null || raza.isBlank()) ? null : raza.trim().toLowerCase(Locale.ROOT);
+        List<Mascota> base = estado == EstadoMascota.DISPONIBLE
+                ? mascotaRepository.findDisponiblesConDetalle(EstadoMascota.DISPONIBLE)
+                : mascotaRepository.findAllConDetalle();
+
+        return base.stream()
+                .filter(m -> estado == null || m.getEstado() == estado)
+                .filter(m -> refugioId == null || (m.getRefugio() != null && refugioId.equals(m.getRefugio().getId())))
+                .filter(m -> especieId == null || (m.getEspecie() != null && especieId.equals(m.getEspecie().getId())))
+                .filter(m -> razaFiltro == null || (m.getRaza() != null
+                        && m.getRaza().toLowerCase(Locale.ROOT).contains(razaFiltro)))
+                .filter(m -> edadMin == null || m.getEdad() >= edadMin)
+                .filter(m -> edadMax == null || m.getEdad() <= edadMax)
                 .map(mascotaMapper::toDTO)
                 .toList();
     }

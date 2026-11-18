@@ -26,6 +26,30 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("scroll", onScroll, { passive: true });
   }
 
+  const toggle = document.querySelector("[data-nav-toggle]");
+  const panel = document.querySelector("[data-nav-panel]");
+  if (toggle && panel) {
+    toggle.addEventListener("click", () => {
+      const open = panel.classList.toggle("is-open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      document.body.classList.toggle("nav-open", open);
+    });
+  }
+
+  const experiencia = document.getElementById("tieneExperiencia");
+  const guiaNo = document.getElementById("guiaSinExperiencia");
+  const guiaSi = document.getElementById("guiaConExperiencia");
+  const syncExperiencia = () => {
+    if (!experiencia || !guiaNo || !guiaSi) return;
+    const tiene = experiencia.checked;
+    guiaSi.hidden = !tiene;
+    guiaNo.hidden = tiene;
+  };
+  if (experiencia) {
+    experiencia.addEventListener("change", syncExperiencia);
+    syncExperiencia();
+  }
+
   document.querySelectorAll(".btn, .card, .auth-demo span").forEach((el) => {
     el.addEventListener("mousemove", (event) => {
       const rect = el.getBoundingClientRect();

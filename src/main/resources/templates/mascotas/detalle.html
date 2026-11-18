@@ -8,28 +8,47 @@
     <div class="container split">
         <div class="card">
             <div class="card-media" style="aspect-ratio:16/11">
-                <img th:src="${mascota.fotoUrl}" th:alt="${mascota.nombre}">
+                <img th:src="${mascota.fotoUrl}" th:alt="${mascota.nombre}"
+                     onerror="this.src='/img/logo.jpg'">
             </div>
         </div>
         <div class="panel">
             <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+            <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
             <span class="badge" th:text="${mascota.estado}"></span>
             <h1 class="section-title" th:text="${mascota.nombre}"></h1>
             <p class="meta" th:text="${mascota.especieNombre} + ' · ' + ${mascota.raza} + ' · ' + ${mascota.edad} + ' años'"></p>
             <p th:text="${mascota.descripcion}"></p>
-            <p><strong>Salud:</strong> <span th:text="${mascota.estadoSalud}"></span></p>
-            <p><strong>Refugio:</strong> <span th:text="${mascota.refugioNombre}"></span></p>
+            <ul class="detail-list">
+                <li><strong>Edad:</strong> <span th:text="${mascota.edad} + ' años'"></span></li>
+                <li><strong>Raza:</strong> <span th:text="${mascota.raza}"></span></li>
+                <li><strong>Salud:</strong> <span th:text="${mascota.estadoSalud}"></span></li>
+                <li><strong>Refugio:</strong> <span th:text="${mascota.refugioNombre}"></span></li>
+            </ul>
 
             <div sec:authorize="hasRole('ADOPTANTE')" th:if="${mascota.estado.name() == 'DISPONIBLE'}">
                 <form th:action="@{/adopciones/solicitar/{id}(id=${mascota.id})}" method="post" style="margin-top:1rem">
-                    <label>Mensaje para el refugio</label>
-                    <textarea name="observaciones" rows="3" placeholder="Cuéntanos por qué quieres adoptarlo"></textarea>
+                    <label for="observaciones">Mensaje para el refugio</label>
+                    <textarea id="observaciones" name="observaciones" rows="3"
+                              placeholder="Cuéntanos por qué quieres adoptarlo"></textarea>
                     <button class="btn btn-amber" type="submit">Solicitar adopción</button>
                 </form>
             </div>
-            <a sec:authorize="isAnonymous()" class="btn btn-primary" th:href="@{/login}">Inicia sesión para adoptar</a>
+
+            <div sec:authorize="isAnonymous()" class="adopt-cta" th:if="${mascota.estado.name() == 'DISPONIBLE'}">
+                <h3>¿Quieres adoptarlo?</h3>
+                <p>Puedes ver toda su información sin cuenta. Para enviar una solicitud de adopción necesitas registrarte.</p>
+                <div class="actions">
+                    <a class="btn btn-amber" th:href="@{/registro}">Crear cuenta para adoptar</a>
+                    <a class="btn btn-secondary" th:href="@{/login}">Ya tengo cuenta</a>
+                </div>
+            </div>
+
+            <a class="auth-link" style="margin-top:1rem" th:href="@{/mascotas/catalogo}">← Volver al catálogo</a>
         </div>
     </div>
 </section>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<script th:src="@{/js/app.js}"></script>
 </body>
 </html>

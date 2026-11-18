@@ -52,7 +52,7 @@
         <div class="grid-cards stagger">
             <article class="card pet-card" th:each="m : ${mascotas}">
                 <div class="card-media">
-                    <img th:src="${m.fotoUrl}" th:alt="${m.nombre}">
+                    <img th:src="${m.fotoUrl}" th:alt="${m.nombre}" onerror="this.src='/img/logo.jpg'">
                     <span class="badge floating-badge" th:text="${m.especieNombre}"></span>
                 </div>
                 <div class="card-body">

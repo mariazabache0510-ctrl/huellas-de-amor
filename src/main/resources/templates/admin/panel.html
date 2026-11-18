@@ -1,40 +1,191 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Panel admin')}"></head>
+<head th:replace="~{fragments/layout :: head('Administración')}"></head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 <section class="section">
     <div class="container">
-        <h1 class="section-title">Panel administrador</h1>
-        <p class="section-lead">Vista general del sistema de adopción Huellas de Amor.</p>
-        <div class="stats stagger">
-            <div class="stat"><strong th:text="${totalMascotas}">0</strong><span>Mascotas totales</span></div>
-            <div class="stat"><strong th:text="${disponibles}">0</strong><span>Disponibles</span></div>
-            <div class="stat"><strong th:text="${#lists.size(solicitudes)}">0</strong><span>Solicitudes</span></div>
+        <h1 class="section-title">Panel de administración</h1>
+        <p class="section-lead">Autogestión completa: métricas, mascotas, refugios, adopciones y seguimientos en un solo lugar.</p>
+
+        <div class="admin-tabs">
+            <a th:href="@{/admin(tab='resumen')}" th:classappend="${tab == 'resumen'} ? ' is-active'">Resumen</a>
+            <a th:href="@{/admin(tab='mascotas')}" th:classappend="${tab == 'mascotas'} ? ' is-active'">Mascotas</a>
+            <a th:href="@{/admin(tab='refugios')}" th:classappend="${tab == 'refugios'} ? ' is-active'">Refugios</a>
+            <a th:href="@{/admin(tab='adopciones')}" th:classappend="${tab == 'adopciones'} ? ' is-active'">Adopciones</a>
+            <a th:href="@{/admin(tab='seguimientos')}" th:classappend="${tab == 'seguimientos'} ? ' is-active'">Seguimientos</a>
         </div>
-        <div class="split">
-            <div class="panel">
-                <h2>Disponibles por especie</h2>
-                <ul>
-                    <li th:each="row : ${porEspecie}" th:text="${row[0]} + ': ' + ${row[1]}"></li>
-                </ul>
-                <h2>Disponibles por refugio</h2>
-                <ul>
-                    <li th:each="row : ${porRefugio}" th:text="${row[0]} + ': ' + ${row[1]}"></li>
-                </ul>
+
+        <div th:if="${tab == 'resumen'}">
+            <div class="stats stagger">
+                <div class="stat"><strong th:text="${totalMascotas}">0</strong><span>Mascotas</span></div>
+                <div class="stat"><strong th:text="${disponibles}">0</strong><span>Disponibles</span></div>
+                <div class="stat"><strong th:text="${pendientesCount}">0</strong><span>Solicitudes pendientes</span></div>
+                <div class="stat"><strong th:text="${aprobadasCount}">0</strong><span>Adopciones aprobadas</span></div>
+                <div class="stat"><strong th:text="${totalUsuarios}">0</strong><span>Usuarios</span></div>
+                <div class="stat"><strong th:text="${totalRefugios}">0</strong><span>Refugios</span></div>
             </div>
-            <div class="panel">
-                <h2>Accesos rápidos</h2>
-                <div class="actions">
-                    <a class="btn btn-primary" th:href="@{/mascotas/gestionar}">CRUD mascotas</a>
-                    <a class="btn btn-secondary" th:href="@{/refugios}">CRUD refugios</a>
-                    <a class="btn btn-secondary" th:href="@{/adopciones/gestionar}">Adopciones</a>
-                    <a class="btn btn-secondary" th:href="@{/seguimientos}">Seguimientos</a>
+
+            <div class="split">
+                <div class="panel">
+                    <h2>Disponibles por especie</h2>
+                    <canvas id="chartEspecie" height="180"></canvas>
+                    <ul class="kpi-list">
+                        <li th:each="row : ${porEspecie}" th:text="${row[0]} + ': ' + ${row[1]}"></li>
+                    </ul>
                 </div>
+                <div class="panel">
+                    <h2>Disponibles por refugio</h2>
+                    <canvas id="chartRefugio" height="180"></canvas>
+                    <ul class="kpi-list">
+                        <li th:each="row : ${porRefugio}" th:text="${row[0]} + ': ' + ${row[1]}"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="panel" style="margin-top:1.2rem">
+                <h2>KPIs de adopción</h2>
+                <p class="meta">Usa estos indicadores para decidir priorización de visitas y difusión.</p>
+                <div class="stats">
+                    <div class="stat"><strong th:text="${#lists.size(solicitudes)}">0</strong><span>Total solicitudes</span></div>
+                    <div class="stat"><strong th:text="${rechazadasCount}">0</strong><span>Rechazadas</span></div>
+                    <div class="stat"><strong th:text="${disponibles > 0 ? (#numbers.formatDecimal(aprobadasCount * 100.0 / (disponibles + aprobadasCount), 1, 1)) : 0}">0</strong><span>% adopción estimada</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${tab == 'mascotas'}">
+            <div class="actions" style="margin-bottom:1rem">
+                <a class="btn btn-primary" th:href="@{/mascotas/gestionar/nueva}">Añadir mascota</a>
+                <a class="btn btn-secondary" th:href="@{/mascotas/gestionar}">Abrir CRUD completo</a>
+            </div>
+            <div class="panel table-wrap" th:if="${!#lists.isEmpty(mascotas)}">
+                <table>
+                    <thead>
+                    <tr><th>Nombre</th><th>Especie</th><th>Raza</th><th>Edad</th><th>Estado</th><th>Refugio</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="m : ${mascotas}">
+                        <td th:text="${m.nombre}"></td>
+                        <td th:text="${m.especieNombre}"></td>
+                        <td th:text="${m.raza}"></td>
+                        <td th:text="${m.edad}"></td>
+                        <td><span class="badge" th:text="${m.estado}"></span></td>
+                        <td th:text="${m.refugioNombre}"></td>
+                        <td><a class="btn btn-secondary" th:href="@{/mascotas/gestionar/{id}/editar(id=${m.id})}">Editar</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="empty-state" th:if="${#lists.isEmpty(mascotas)}">
+                <h3>Aún no hay mascotas</h3>
+                <p>Registra la primera para empezar el catálogo.</p>
+            </div>
+        </div>
+
+        <div th:if="${tab == 'refugios'}">
+            <div class="actions" style="margin-bottom:1rem">
+                <a class="btn btn-primary" th:href="@{/refugios/nuevo}">Nuevo refugio</a>
+            </div>
+            <div class="grid-cards" th:if="${!#lists.isEmpty(refugios)}">
+                <article class="card" th:each="r : ${refugios}">
+                    <div class="card-body">
+                        <h3 th:text="${r.nombre}"></h3>
+                        <p class="meta" th:text="${r.direccion}"></p>
+                        <div class="actions">
+                            <a class="btn btn-secondary" th:href="@{/refugios/{id}/editar(id=${r.id})}">Editar</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div class="empty-state" th:if="${#lists.isEmpty(refugios)}">
+                <h3>Sin refugios registrados</h3>
+                <p>Añade el primer punto de acogida.</p>
+            </div>
+        </div>
+
+        <div th:if="${tab == 'adopciones'}">
+            <div class="panel table-wrap" th:if="${!#lists.isEmpty(solicitudes)}">
+                <table>
+                    <thead>
+                    <tr><th>Mascota</th><th>Adoptante</th><th>Voluntario</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="a : ${solicitudes}">
+                        <td th:text="${a.mascotaNombre}"></td>
+                        <td th:text="${a.adoptanteNombre}"></td>
+                        <td th:text="${a.voluntarioNombre != null ? a.voluntarioNombre : '—'}"></td>
+                        <td th:text="${a.fechaSolicitud}"></td>
+                        <td><span class="badge" th:text="${a.estado}"></span></td>
+                        <td class="actions" th:if="${a.estado.name() == 'PENDIENTE'}">
+                            <form th:action="@{/adopciones/gestionar/{id}/aprobar(id=${a.id})}" method="post">
+                                <button class="btn btn-primary" type="submit">Aprobar</button>
+                            </form>
+                            <form th:action="@{/adopciones/gestionar/{id}/rechazar(id=${a.id})}" method="post">
+                                <button class="btn btn-danger" type="submit">Rechazar</button>
+                            </form>
+                        </td>
+                        <td th:unless="${a.estado.name() == 'PENDIENTE'}">—</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="empty-state" th:if="${#lists.isEmpty(solicitudes)}">
+                <h3>Aún no hay registros de adopción</h3>
+                <p>Cuando un adoptante solicite una mascota, verás aquí el flujo completo para decidir con KPIs.</p>
+            </div>
+        </div>
+
+        <div th:if="${tab == 'seguimientos'}">
+            <div class="actions" style="margin-bottom:1rem">
+                <a class="btn btn-primary" th:href="@{/seguimientos/nuevo}">Nuevo seguimiento</a>
+            </div>
+            <div class="panel table-wrap" th:if="${!#lists.isEmpty(seguimientos)}">
+                <table>
+                    <thead>
+                    <tr><th>Mascota</th><th>Adoptante</th><th>Fecha</th><th>Comentarios</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="s : ${seguimientos}">
+                        <td th:text="${s.mascotaNombre}"></td>
+                        <td th:text="${s.adoptanteNombre}"></td>
+                        <td th:text="${s.fechaVisita}"></td>
+                        <td th:text="${s.comentarios}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="empty-state" th:if="${#lists.isEmpty(seguimientos)}">
+                <h3>Sin seguimientos todavía</h3>
+                <p>Registra visitas postadopción para medir bienestar y cierre del proceso.</p>
             </div>
         </div>
     </div>
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const especieLabels = /*[[${especieLabels}]]*/ [];
+    const especieValues = /*[[${especieValues}]]*/ [];
+    const refugioLabels = /*[[${refugioLabels}]]*/ [];
+    const refugioValues = /*[[${refugioValues}]]*/ [];
+    const tab = /*[[${tab}]]*/ 'resumen';
+    if (tab === 'resumen' && window.Chart) {
+        const mk = (id, labels, values) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            new Chart(el, {
+                type: 'doughnut',
+                data: { labels, datasets: [{ data: values, backgroundColor: ['#2f8f6b', '#3b82a0', '#e0a12b', '#0f3d2e'] }] },
+                options: { plugins: { legend: { position: 'bottom' } } }
+            });
+        };
+        mk('chartEspecie', especieLabels, especieValues);
+        mk('chartRefugio', refugioLabels, refugioValues);
+    }
+    /*]]>*/
+</script>
 <script th:src="@{/js/app.js}"></script>
 </body>
 </html>

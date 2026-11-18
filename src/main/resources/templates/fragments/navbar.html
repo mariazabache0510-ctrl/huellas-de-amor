@@ -2,26 +2,56 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
-<nav th:fragment="navbar" class="site-header">
+<nav th:fragment="navbar" class="site-header" th:with="path=${#request.requestURI}">
     <div class="container nav">
         <a class="brand" th:href="@{/}">
-            <span class="brand-mark" aria-hidden="true"></span>
-            Huellas de Amor
+            <img class="brand-logo" th:src="@{/img/logo.jpg}" alt="Huellas de Amor">
+            <span>Huellas de Amor</span>
         </a>
-        <div class="nav-links">
-            <a th:href="@{/}">Inicio</a>
-            <a th:href="@{/mascotas/catalogo}">Mascotas</a>
-            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}">Admin</a>
-            <a sec:authorize="hasAnyRole('VOLUNTARIO','ADMIN')" th:href="@{/voluntario}">Voluntario</a>
-            <a sec:authorize="hasAnyRole('ADOPTANTE','ADMIN')" th:href="@{/adoptante}">Adoptante</a>
-            <a sec:authorize="hasAnyRole('VOLUNTARIO','ADMIN')" th:href="@{/refugios}">Refugios</a>
-            <a sec:authorize="hasAnyRole('VOLUNTARIO','ADMIN')" th:href="@{/adopciones/gestionar}">Adopciones</a>
-            <a sec:authorize="isAnonymous()" th:href="@{/registro}">Registrarse</a>
-            <a sec:authorize="isAnonymous()" class="btn btn-primary" th:href="@{/login}">Iniciar sesión</a>
-            <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" style="display:inline">
-                <span sec:authentication="name"></span>
-                <button class="btn btn-secondary" type="submit">Salir</button>
-            </form>
+
+        <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" data-nav-toggle>
+            <span></span><span></span><span></span>
+        </button>
+
+        <div class="nav-panel" data-nav-panel>
+            <div class="nav-links">
+                <a th:href="@{/}"
+                   th:classappend="${path == '/' ? ' is-active' : ''}">Inicio</a>
+                <a th:href="@{/mascotas/catalogo}"
+                   th:classappend="${#strings.startsWith(path, '/mascotas') and !#strings.startsWith(path, '/mascotas/gestionar') ? ' is-active' : ''}">Mascotas</a>
+                <a th:href="@{/refugios}"
+                   th:classappend="${#strings.startsWith(path, '/refugios') ? ' is-active' : ''}">Refugios</a>
+                <a th:href="@{/como-adoptar}"
+                   th:classappend="${path == '/como-adoptar' ? ' is-active' : ''}">Cómo adoptar</a>
+
+                <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}"
+                   th:classappend="${#strings.startsWith(path, '/admin') ? ' is-active' : ''}">Administración</a>
+                <a sec:authorize="hasRole('VOLUNTARIO')" th:href="@{/voluntario}"
+                   th:classappend="${#strings.startsWith(path, '/voluntario') ? ' is-active' : ''}">Mi panel</a>
+                <a sec:authorize="hasRole('ADOPTANTE')" th:href="@{/adoptante}"
+                   th:classappend="${#strings.startsWith(path, '/adoptante') ? ' is-active' : ''}">Mi panel</a>
+            </div>
+
+            <div class="nav-auth" sec:authorize="isAnonymous()">
+                <a class="nav-ghost" th:href="@{/registro}"
+                   th:classappend="${path == '/registro' ? ' is-active' : ''}">Registrarse</a>
+                <a class="btn btn-primary nav-login" th:href="@{/login}">Iniciar sesión</a>
+            </div>
+
+            <div class="nav-user" sec:authorize="isAuthenticated()">
+                <div class="user-chip">
+                    <span class="user-avatar" aria-hidden="true"></span>
+                    <div class="user-meta">
+                        <strong sec:authentication="name">usuario</strong>
+                        <small sec:authorize="hasRole('ADMIN')">Administrador</small>
+                        <small sec:authorize="hasRole('VOLUNTARIO')">Voluntario</small>
+                        <small sec:authorize="hasRole('ADOPTANTE')">Adoptante</small>
+                    </div>
+                </div>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-secondary" type="submit">Salir</button>
+                </form>
+            </div>
         </div>
     </div>
 </nav>
