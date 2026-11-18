@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Seguimientos')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<section class="section">
+    <div class="container">
+        <div class="actions" style="justify-content:space-between;margin-bottom:1rem">
+            <h1 class="section-title" style="margin:0">Seguimiento postadopción</h1>
+            <a class="btn btn-primary" th:href="@{/seguimientos/nuevo}">Nuevo reporte</a>
+        </div>
+        <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
+        <div class="panel table-wrap">
+            <table>
+                <thead>
+                <tr><th>Mascota</th><th>Adoptante</th><th>Fecha visita</th><th>Comentarios</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="s : ${seguimientos}">
+                    <td th:text="${s.mascotaNombre}"></td>
+                    <td th:text="${s.adoptanteNombre}"></td>
+                    <td th:text="${s.fechaVisita}"></td>
+                    <td th:text="${s.comentarios}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+</body>
+</html>

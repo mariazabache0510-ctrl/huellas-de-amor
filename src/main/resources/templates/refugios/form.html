@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Formulario refugio')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<section class="section">
+    <div class="container">
+        <div class="panel" style="max-width:640px;margin:auto">
+            <h1 class="section-title" th:text="${refugio.id == null} ? 'Nuevo refugio' : 'Editar refugio'"></h1>
+            <form th:object="${refugio}"
+                  th:action="${refugio.id == null} ? @{/refugios} : @{/refugios/{id}(id=${refugio.id})}"
+                  method="post">
+                <label>Nombre</label>
+                <input th:field="*{nombre}" required>
+                <label>Dirección</label>
+                <input th:field="*{direccion}" required>
+                <label>Contacto</label>
+                <input th:field="*{contacto}">
+                <label>Correo</label>
+                <input type="email" th:field="*{correo}">
+                <label>Teléfono</label>
+                <input th:field="*{telefono}">
+                <label>Descripción</label>
+                <textarea th:field="*{descripcion}" rows="3"></textarea>
+                <button class="btn btn-primary" type="submit">Guardar</button>
+            </form>
+        </div>
+    </div>
+</section>
+</body>
+</html>

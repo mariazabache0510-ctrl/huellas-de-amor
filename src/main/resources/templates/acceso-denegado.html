@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Acceso denegado')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container section">
+    <div class="panel">
+        <h1 class="section-title">403 · Acceso denegado</h1>
+        <p class="section-lead">No tienes permisos para ver esta página. Si crees que es un error, inicia sesión con otro rol.</p>
+        <a class="btn btn-primary" th:href="@{/}">Volver al inicio</a>
+    </div>
+</div>
+</body>
+</html>

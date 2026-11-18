@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: huellas-postgres
+    environment:
+      POSTGRES_DB: huellas_de_amor
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "55433:5432"
+    volumes:
+      - huellas_pgdata:/var/lib/postgresql/data
+
+volumes:
+  huellas_pgdata:

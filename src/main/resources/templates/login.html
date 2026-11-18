@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Iniciar sesión')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container">
+    <div class="panel form-shell">
+        <h1 class="section-title">Iniciar sesión</h1>
+        <p class="section-lead">Accede según tu rol: administrador, voluntario o adoptante.</p>
+        <div th:if="${param.error}" class="alert alert-error">Usuario o contraseña incorrectos</div>
+        <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
+        <form th:action="@{/login}" method="post">
+            <label>Usuario</label>
+            <input type="text" name="username" required placeholder="admin / voluntario / adoptante">
+            <label>Contraseña</label>
+            <input type="password" name="password" required>
+            <button class="btn btn-primary" type="submit">Entrar</button>
+        </form>
+        <p style="margin-top:1rem" class="meta">Demo: admin/admin123 · voluntario/vol123 · adoptante/ado123</p>
+        <a th:href="@{/registro}">Crear cuenta de adoptante</a>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

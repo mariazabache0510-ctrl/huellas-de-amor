@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Panel voluntario')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<section class="section">
+    <div class="container">
+        <h1 class="section-title">Panel voluntario</h1>
+        <p class="section-lead">Gestiona solicitudes pendientes y el inventario de mascotas.</p>
+        <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
+        <div class="actions" style="margin-bottom:1.2rem">
+            <a class="btn btn-primary" th:href="@{/mascotas/gestionar}">Gestionar mascotas</a>
+            <a class="btn btn-secondary" th:href="@{/adopciones/gestionar}">Ver adopciones</a>
+            <a class="btn btn-secondary" th:href="@{/seguimientos/nuevo}">Nuevo seguimiento</a>
+        </div>
+        <div class="panel">
+            <h2>Solicitudes pendientes</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr><th>Mascota</th><th>Adoptante</th><th>Fecha</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="a : ${pendientes}">
+                        <td th:text="${a.mascotaNombre}"></td>
+                        <td th:text="${a.adoptanteNombre}"></td>
+                        <td th:text="${a.fechaSolicitud}"></td>
+                        <td><a class="btn btn-amber" th:href="@{/adopciones/gestionar}">Resolver</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

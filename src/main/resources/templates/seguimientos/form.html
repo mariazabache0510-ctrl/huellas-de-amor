@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Nuevo seguimiento')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<section class="section">
+    <div class="container">
+        <div class="panel" style="max-width:640px;margin:auto">
+            <h1 class="section-title">Registrar seguimiento</h1>
+            <form th:action="@{/seguimientos}" th:object="${seguimiento}" method="post">
+                <label>Mascota</label>
+                <select th:field="*{mascotaId}" required>
+                    <option th:each="m : ${mascotas}" th:value="${m.id}" th:text="${m.nombre}"></option>
+                </select>
+                <label>Adoptante</label>
+                <select th:field="*{adoptanteId}" required>
+                    <option th:each="a : ${adoptantes}" th:value="${a.id}"
+                            th:text="${a.usuario != null ? a.usuario.nombre : a.id}"></option>
+                </select>
+                <label>Fecha de visita</label>
+                <input type="date" th:field="*{fechaVisita}" required>
+                <label>Comentarios</label>
+                <textarea th:field="*{comentarios}" rows="4" required></textarea>
+                <button class="btn btn-primary" type="submit">Guardar</button>
+            </form>
+        </div>
+    </div>
+</section>
+</body>
+</html>

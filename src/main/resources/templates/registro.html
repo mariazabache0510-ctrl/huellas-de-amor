@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Registro')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container">
+    <div class="panel form-shell" style="width:min(560px,100%)">
+        <h1 class="section-title">Registro de adoptante</h1>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+        <form th:action="@{/registro}" th:object="${registro}" method="post">
+            <label>Nombre completo</label>
+            <input th:field="*{nombre}" required>
+            <label>Usuario</label>
+            <input th:field="*{username}" required>
+            <label>Correo</label>
+            <input type="email" th:field="*{correo}" required>
+            <label>Contraseña</label>
+            <input type="password" th:field="*{password}" required>
+            <label>Teléfono</label>
+            <input th:field="*{telefono}">
+            <label>Dirección</label>
+            <input th:field="*{direccion}">
+            <label>Motivación</label>
+            <textarea th:field="*{motivacion}" rows="3"></textarea>
+            <label>Tipo de vivienda</label>
+            <input th:field="*{vivienda}" placeholder="Casa con patio / Apartamento">
+            <label><input type="checkbox" th:field="*{tieneExperiencia}" style="width:auto; margin-right:.4rem"> Tengo experiencia con mascotas</label>
+            <button class="btn btn-primary" type="submit">Crear cuenta</button>
+        </form>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

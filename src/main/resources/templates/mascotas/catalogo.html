@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Catálogo')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<section class="section">
+    <div class="container">
+        <h1 class="section-title">Catálogo de mascotas</h1>
+        <p class="section-lead">Filtra por refugio o especie para encontrar a tu compañero ideal.</p>
+        <form class="panel" method="get" th:action="@{/mascotas/catalogo}" style="margin-bottom:1.5rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; align-items:end">
+            <div>
+                <label>Refugio</label>
+                <select name="refugioId">
+                    <option value="">Todos</option>
+                    <option th:each="r : ${refugios}" th:value="${r.id}" th:text="${r.nombre}" th:selected="${refugioId == r.id}"></option>
+                </select>
+            </div>
+            <div>
+                <label>Especie</label>
+                <select name="especieId">
+                    <option value="">Todas</option>
+                    <option th:each="e : ${especies}" th:value="${e.id}" th:text="${e.nombre}" th:selected="${especieId == e.id}"></option>
+                </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Filtrar</button>
+        </form>
+        <div class="grid-cards stagger">
+            <article class="card" th:each="m : ${mascotas}">
+                <div class="card-media"><img th:src="${m.fotoUrl}" th:alt="${m.nombre}"></div>
+                <div class="card-body">
+                    <span class="badge-sky badge" th:text="${m.estado}"></span>
+                    <h3 th:text="${m.nombre}"></h3>
+                    <p class="meta" th:text="${m.especieNombre} + ' · ' + ${m.raza} + ' · ' + ${m.edad} + ' años'"></p>
+                    <a class="btn btn-primary" th:href="@{/mascotas/detalle/{id}(id=${m.id})}">Ver más</a>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

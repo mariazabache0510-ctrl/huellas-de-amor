@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Formulario mascota')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<section class="section">
+    <div class="container">
+        <div class="panel" style="max-width:720px;margin:auto">
+            <h1 class="section-title" th:text="${mascota.id == null} ? 'Nueva mascota' : 'Editar mascota'"></h1>
+            <form th:object="${mascota}"
+                  th:action="${mascota.id == null} ? @{/mascotas/gestionar} : @{/mascotas/gestionar/{id}(id=${mascota.id})}"
+                  method="post">
+                <label>Nombre</label>
+                <input th:field="*{nombre}" required>
+                <label>Especie</label>
+                <select th:field="*{especieId}" required>
+                    <option th:each="e : ${especies}" th:value="${e.id}" th:text="${e.nombre}"></option>
+                </select>
+                <label>Raza</label>
+                <input th:field="*{raza}">
+                <label>Edad</label>
+                <input type="number" th:field="*{edad}" min="0">
+                <label>Estado de salud</label>
+                <input th:field="*{estadoSalud}">
+                <label>URL de foto</label>
+                <input th:field="*{fotoUrl}">
+                <label>Estado</label>
+                <select th:field="*{estado}">
+                    <option th:each="est : ${estados}" th:value="${est}" th:text="${est}"></option>
+                </select>
+                <label>Refugio</label>
+                <select th:field="*{refugioId}" required>
+                    <option th:each="r : ${refugios}" th:value="${r.id}" th:text="${r.nombre}"></option>
+                </select>
+                <label>Descripción</label>
+                <textarea th:field="*{descripcion}" rows="4"></textarea>
+                <button class="btn btn-primary" type="submit">Guardar</button>
+            </form>
+        </div>
+    </div>
+</section>
+</body>
+</html>

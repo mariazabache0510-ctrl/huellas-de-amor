@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Gestionar mascotas')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<section class="section">
+    <div class="container">
+        <div class="actions" style="justify-content:space-between;margin-bottom:1rem">
+            <h1 class="section-title" style="margin:0">CRUD de mascotas</h1>
+            <a class="btn btn-primary" th:href="@{/mascotas/gestionar/nueva}">Nueva mascota</a>
+        </div>
+        <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
+        <div class="panel table-wrap">
+            <table>
+                <thead>
+                <tr><th>Nombre</th><th>Especie</th><th>Refugio</th><th>Estado</th><th>Acciones</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="m : ${mascotas}">
+                    <td th:text="${m.nombre}"></td>
+                    <td th:text="${m.especieNombre}"></td>
+                    <td th:text="${m.refugioNombre}"></td>
+                    <td><span class="badge" th:text="${m.estado}"></span></td>
+                    <td class="actions">
+                        <a class="btn btn-secondary" th:href="@{/mascotas/gestionar/{id}/editar(id=${m.id})}">Editar</a>
+                        <form th:action="@{/mascotas/gestionar/{id}/eliminar(id=${m.id})}" method="post">
+                            <button class="btn btn-danger" type="submit">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+</body>
+</html>

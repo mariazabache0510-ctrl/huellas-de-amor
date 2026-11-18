@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Detalle mascota')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<section class="section">
+    <div class="container split">
+        <div class="card">
+            <div class="card-media" style="aspect-ratio:16/11">
+                <img th:src="${mascota.fotoUrl}" th:alt="${mascota.nombre}">
+            </div>
+        </div>
+        <div class="panel">
+            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+            <span class="badge" th:text="${mascota.estado}"></span>
+            <h1 class="section-title" th:text="${mascota.nombre}"></h1>
+            <p class="meta" th:text="${mascota.especieNombre} + ' · ' + ${mascota.raza} + ' · ' + ${mascota.edad} + ' años'"></p>
+            <p th:text="${mascota.descripcion}"></p>
+            <p><strong>Salud:</strong> <span th:text="${mascota.estadoSalud}"></span></p>
+            <p><strong>Refugio:</strong> <span th:text="${mascota.refugioNombre}"></span></p>
+
+            <div sec:authorize="hasRole('ADOPTANTE')" th:if="${mascota.estado.name() == 'DISPONIBLE'}">
+                <form th:action="@{/adopciones/solicitar/{id}(id=${mascota.id})}" method="post" style="margin-top:1rem">
+                    <label>Mensaje para el refugio</label>
+                    <textarea name="observaciones" rows="3" placeholder="Cuéntanos por qué quieres adoptarlo"></textarea>
+                    <button class="btn btn-amber" type="submit">Solicitar adopción</button>
+                </form>
+            </div>
+            <a sec:authorize="isAnonymous()" class="btn btn-primary" th:href="@{/login}">Inicia sesión para adoptar</a>
+        </div>
+    </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Panel adoptante')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<section class="section">
+    <div class="container">
+        <h1 class="section-title">Hola, futuro hogar</h1>
+        <p class="section-lead">Consulta mascotas disponibles, tu historial de solicitudes y seguimientos.</p>
+        <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+        <h2 class="section-title" style="font-size:1.8rem">Disponibles para ti</h2>
+        <div class="grid-cards stagger">
+            <article class="card" th:each="m : ${disponibles}">
+                <div class="card-media"><img th:src="${m.fotoUrl}" th:alt="${m.nombre}"></div>
+                <div class="card-body">
+                    <span class="badge" th:text="${m.especieNombre}"></span>
+                    <h3 th:text="${m.nombre}"></h3>
+                    <p class="meta" th:text="${m.refugioNombre}"></p>
+                    <a class="btn btn-primary" th:href="@{/mascotas/detalle/{id}(id=${m.id})}">Ver detalle</a>
+                </div>
+            </article>
+        </div>
+
+        <div class="panel" style="margin-top:2rem">
+            <h2>Historial de adopciones</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Mascota</th><th>Fecha</th><th>Estado</th><th>Observaciones</th></tr></thead>
+                    <tbody>
+                    <tr th:each="h : ${historial}">
+                        <td th:text="${h.mascotaNombre}"></td>
+                        <td th:text="${h.fechaSolicitud}"></td>
+                        <td><span class="badge" th:text="${h.estado}"></span></td>
+                        <td th:text="${h.observaciones}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>
