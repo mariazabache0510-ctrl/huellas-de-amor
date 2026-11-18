@@ -36,10 +36,26 @@ public class MascotaService {
 
     @Transactional(readOnly = true)
     public List<MascotaDTO> buscar(EstadoMascota estado, Long refugioId, Long especieId) {
-        return mascotaRepository.buscarConFiltros(estado, refugioId, especieId)
+        return buscar(estado, refugioId, especieId, null, null, null);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MascotaDTO> buscar(EstadoMascota estado,
+                                   Long refugioId,
+                                   Long especieId,
+                                   String raza,
+                                   Integer edadMin,
+                                   Integer edadMax) {
+        String razaFiltro = (raza == null || raza.isBlank()) ? null : raza.trim();
+        return mascotaRepository.buscarConFiltros(estado, refugioId, especieId, razaFiltro, edadMin, edadMax)
                 .stream()
                 .map(mascotaMapper::toDTO)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> listarRazas() {
+        return mascotaRepository.findRazasDistintas();
     }
 
     @Transactional(readOnly = true)

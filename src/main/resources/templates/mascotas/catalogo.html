@@ -3,37 +3,69 @@
 <head th:replace="~{fragments/layout :: head('Catálogo')}"></head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
-<section class="section">
+<section class="section catalog-hero">
     <div class="container">
-        <h1 class="section-title">Catálogo de mascotas</h1>
-        <p class="section-lead">Filtra por refugio o especie para encontrar a tu compañero ideal.</p>
-        <form class="panel" method="get" th:action="@{/mascotas/catalogo}" style="margin-bottom:1.5rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; align-items:end">
-            <div>
-                <label>Refugio</label>
-                <select name="refugioId">
+        <p class="eyebrow reveal">Adopción responsable</p>
+        <h1 class="section-title reveal">Catálogo de mascotas</h1>
+        <p class="section-lead reveal">Filtra por especie, raza, edad o refugio y encuentra a tu compañero ideal.</p>
+
+        <form class="filter-panel reveal" method="get" th:action="@{/mascotas/catalogo}">
+            <div class="field">
+                <label for="refugioId">Refugio</label>
+                <select id="refugioId" name="refugioId">
                     <option value="">Todos</option>
                     <option th:each="r : ${refugios}" th:value="${r.id}" th:text="${r.nombre}" th:selected="${refugioId == r.id}"></option>
                 </select>
             </div>
-            <div>
-                <label>Especie</label>
-                <select name="especieId">
+            <div class="field">
+                <label for="especieId">Especie</label>
+                <select id="especieId" name="especieId">
                     <option value="">Todas</option>
                     <option th:each="e : ${especies}" th:value="${e.id}" th:text="${e.nombre}" th:selected="${especieId == e.id}"></option>
                 </select>
             </div>
-            <button class="btn btn-primary" type="submit">Filtrar</button>
+            <div class="field">
+                <label for="raza">Raza</label>
+                <select id="raza" name="raza">
+                    <option value="">Todas</option>
+                    <option th:each="rz : ${razas}" th:value="${rz}" th:text="${rz}" th:selected="${raza == rz}"></option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="edadMin">Edad mínima</label>
+                <input id="edadMin" type="number" name="edadMin" min="0" max="40" placeholder="0"
+                       th:value="${edadMin}">
+            </div>
+            <div class="field">
+                <label for="edadMax">Edad máxima</label>
+                <input id="edadMax" type="number" name="edadMax" min="0" max="40" placeholder="20"
+                       th:value="${edadMax}">
+            </div>
+            <div class="filter-actions">
+                <button class="btn btn-primary" type="submit">Aplicar filtros</button>
+                <a class="btn btn-secondary" th:href="@{/mascotas/catalogo}">Limpiar</a>
+            </div>
         </form>
+
+        <p class="meta reveal" th:text="'Resultados: ' + ${#lists.size(mascotas)} + ' mascotas'"></p>
+
         <div class="grid-cards stagger">
-            <article class="card" th:each="m : ${mascotas}">
-                <div class="card-media"><img th:src="${m.fotoUrl}" th:alt="${m.nombre}"></div>
+            <article class="card pet-card" th:each="m : ${mascotas}">
+                <div class="card-media">
+                    <img th:src="${m.fotoUrl}" th:alt="${m.nombre}">
+                    <span class="badge floating-badge" th:text="${m.especieNombre}"></span>
+                </div>
                 <div class="card-body">
-                    <span class="badge-sky badge" th:text="${m.estado}"></span>
+                    <span class="badge badge-sky" th:text="${m.estado}"></span>
                     <h3 th:text="${m.nombre}"></h3>
-                    <p class="meta" th:text="${m.especieNombre} + ' · ' + ${m.raza} + ' · ' + ${m.edad} + ' años'"></p>
+                    <p class="meta" th:text="${m.raza} + ' · ' + ${m.edad} + ' años · ' + ${m.refugioNombre}"></p>
                     <a class="btn btn-primary" th:href="@{/mascotas/detalle/{id}(id=${m.id})}">Ver más</a>
                 </div>
             </article>
+        </div>
+        <div th:if="${#lists.isEmpty(mascotas)}" class="empty-state reveal">
+            <h3>No hay coincidencias</h3>
+            <p>Prueba ajustando raza, edad o especie.</p>
         </div>
     </div>
 </section>

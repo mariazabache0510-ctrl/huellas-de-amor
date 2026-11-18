@@ -25,12 +25,20 @@ public class MascotaController {
     @GetMapping("/catalogo")
     public String catalogo(@RequestParam(required = false) Long refugioId,
                            @RequestParam(required = false) Long especieId,
+                           @RequestParam(required = false) String raza,
+                           @RequestParam(required = false) Integer edadMin,
+                           @RequestParam(required = false) Integer edadMax,
                            Model model) {
-        model.addAttribute("mascotas", mascotaService.buscar(EstadoMascota.DISPONIBLE, refugioId, especieId));
+        model.addAttribute("mascotas",
+                mascotaService.buscar(EstadoMascota.DISPONIBLE, refugioId, especieId, raza, edadMin, edadMax));
         model.addAttribute("refugios", refugioService.listar());
         model.addAttribute("especies", especieRepository.findAll());
+        model.addAttribute("razas", mascotaService.listarRazas());
         model.addAttribute("refugioId", refugioId);
         model.addAttribute("especieId", especieId);
+        model.addAttribute("raza", raza);
+        model.addAttribute("edadMin", edadMin);
+        model.addAttribute("edadMax", edadMax);
         return "mascotas/catalogo";
     }
 
