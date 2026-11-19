@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
-<nav th:fragment="navbar" class="site-header" th:with="path=${#request.requestURI}">
+<nav th:fragment="navbar" class="site-header" th:with="path=${currentPath != null ? currentPath : '/'}">
     <div class="container nav">
         <a class="brand" th:href="@{/}">
             <img class="brand-logo" th:src="@{/img/logo.jpg}" alt="Huellas de Amor">
