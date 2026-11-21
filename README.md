@@ -1,24 +1,32 @@
 # Huellas de Amor
 
-Aplicación web monolítica para gestionar la **adopción de mascotas** en Villavicencio.
+Aplicación **full stack** para gestionar la adopción responsable de mascotas en Villavicencio (Meta, Colombia).
 
-Stack alineado con la materia de Frameworks:
+Proyecto final de Frameworks: monolito Spring Boot con vistas Thymeleaf y seguridad por roles.
 
-- Spring Boot 4 + Thymeleaf + Spring Security
-- Spring Data JPA + PostgreSQL
-- DTO, Mapper y Builder
-- Repositorios con consultas personalizadas
-- Manejo global de excepciones
-- Roles: `ADMIN`, `VOLUNTARIO`, `ADOPTANTE`
+## Tecnologías elegidas (justificación)
+
+| Tecnología | Uso | Por qué |
+|------------|-----|---------|
+| **Spring Boot 4** | Backend + despliegue | Servicios, JPA, configuración por entorno |
+| **Thymeleaf** | Frontend server-side | Vistas HTML con el mismo stack, sin SPA extra |
+| **Spring Security** | AuthN/AuthZ | Roles ADMIN / VOLUNTARIO / ADOPTANTE, CSRF, CSP |
+| **Spring Data JPA + PostgreSQL** | Persistencia | Modelo relacional coherente con entidades |
+| React / Next.js / Strapi / SerpAPI | No usadas | El problema se resuelve con un monolito MVC desplegable en Render |
+
+Informe académico detallado: [`docs/INFORME.md`](docs/INFORME.md) (contexto, RF/RNF, modelo, endpoints y vistas).
 
 ## Arranque local
+
+Requisitos: Java 25+, Docker (PostgreSQL).
 
 ```bash
 docker compose up -d
 ./mvnw spring-boot:run
 ```
 
-PostgreSQL local queda en el puerto `55433`. Abre http://localhost:8080
+Abre http://localhost:8080  
+PostgreSQL local: puerto `55433` (ver `docker-compose.yml`).
 
 ### Usuarios demo
 
@@ -28,31 +36,34 @@ PostgreSQL local queda en el puerto `55433`. Abre http://localhost:8080
 | voluntario  | vol123    | VOLUNTARIO |
 | adoptante   | ado123    | ADOPTANTE  |
 
-## Despliegue propuesto: Render + Neon (o Postgres existente)
+## Despliegue (Render + Neon)
 
-Render free solo permite **una** base PostgreSQL activa. Por eso el Blueprint
-despliega solo el servicio web y pide `DATABASE_URL` manualmente.
+1. Crea una base en [Neon](https://console.neon.tech) y copia `DATABASE_URL`.
+2. Conecta el repo en Render (Blueprint `render.yaml`) y pega `DATABASE_URL`.
+3. Deploy automático desde `main`.
 
-Pasos:
+Producción: https://huellas-de-amor.onrender.com
 
-1. Crea una base en [Neon](https://console.neon.tech) (o reutiliza tu Postgres free de Render).
-2. Copia la connection string (`postgres://...`).
-3. En el Blueprint de Render, al sincronizar, pega ese valor en `DATABASE_URL`.
-4. Aplica el sync y espera el deploy; la app sembrará datos demo al iniciar.
+## Módulos principales
 
-Blueprint: `https://dashboard.render.com/blueprint/new?repo=https://github.com/mariazabache0510-ctrl/huellas-de-amor`
+- **Público**: inicio, catálogo, detalle, refugios, cómo adoptar, términos/privacidad.
+- **Adoptante**: solicitud de adopción e historial.
+- **Voluntario**: revisión de solicitudes, inventario y seguimientos.
+- **Admin**: KPIs, gráficas y pestañas de gestión (mascotas, refugios, adopciones, seguimientos).
 
-## Estructura principal
+## Estructura del código
 
 ```
 co.frameworks.huellas
-  config/        Security + seed + datasource Render
+  config/        Security, seed, datasource
   controller/    MVC Thymeleaf
-  dto/ mapper/   Capas de transferencia
+  dto/ mapper/   Transferencia y mapeo
   exception/     Handler global
-  model/         Entidades y enums
-  repository/    JPA + queries
+  model/         Entidades JPA
+  repository/    Consultas
   service/       Reglas de negocio
+  security/      Rate limit login
+  validation/    Reglas de registro
 ```
 
 ## Entidades

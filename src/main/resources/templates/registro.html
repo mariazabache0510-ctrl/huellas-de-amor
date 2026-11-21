@@ -20,44 +20,52 @@
             <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
             <form class="auth-form register-grid" th:action="@{/registro}" th:object="${registro}" method="post" novalidate>
-                <div class="float-field">
-                    <input id="nombre" th:field="*{nombre}" required minlength="3" placeholder=" ">
+                <div class="field">
                     <label for="nombre">Nombre completo *</label>
+                    <input id="nombre" th:field="*{nombre}" required minlength="3"
+                           autocomplete="name" placeholder="Ej. Sofía Pérez">
                     <small class="field-error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
                 </div>
-                <div class="float-field">
-                    <input id="username" th:field="*{username}" required minlength="4" placeholder=" ">
+                <div class="field">
                     <label for="username">Usuario *</label>
+                    <input id="username" th:field="*{username}" required minlength="4"
+                           autocomplete="username" placeholder="Ej. sofia.perez">
                     <small class="field-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
                 </div>
-                <div class="float-field">
-                    <input id="correo" type="email" th:field="*{correo}" required placeholder=" ">
-                    <label for="correo">Correo (Gmail, Outlook…) *</label>
+                <div class="field">
+                    <label for="correo">Correo *</label>
+                    <input id="correo" type="email" th:field="*{correo}" required
+                           autocomplete="email" placeholder="Ej. sofia@gmail.com">
+                    <small class="hint">Gmail, Outlook, Hotmail, Yahoo, iCloud, Proton o edu.co</small>
                     <small class="field-error" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></small>
                 </div>
-                <div class="float-field">
-                    <input id="password" type="password" th:field="*{password}" required minlength="8" placeholder=" ">
+                <div class="field">
                     <label for="password">Contraseña segura *</label>
-                    <small class="hint">Mín. 8 caracteres, mayúscula, minúscula, número y símbolo.</small>
+                    <input id="password" type="password" th:field="*{password}" required minlength="8"
+                           autocomplete="new-password" placeholder="Mínimo 8 caracteres">
+                    <small class="hint">Mayúscula, minúscula, número y símbolo.</small>
                     <small class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
                 </div>
-                <div class="float-field">
-                    <input id="telefono" th:field="*{telefono}" placeholder=" ">
+                <div class="field">
                     <label for="telefono">Teléfono</label>
+                    <input id="telefono" th:field="*{telefono}" autocomplete="tel" placeholder="Ej. 3001234567">
                 </div>
-                <div class="float-field">
-                    <input id="direccion" th:field="*{direccion}" required minlength="5" placeholder=" ">
+                <div class="field">
                     <label for="direccion">Dirección *</label>
+                    <input id="direccion" th:field="*{direccion}" required minlength="5"
+                           autocomplete="street-address" placeholder="Barrio y ciudad">
                     <small class="field-error" th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}"></small>
                 </div>
-                <div class="float-field full">
-                    <textarea id="motivacion" th:field="*{motivacion}" rows="3" required minlength="10" placeholder=" "></textarea>
+                <div class="field full">
                     <label for="motivacion">Motivación *</label>
+                    <textarea id="motivacion" th:field="*{motivacion}" rows="3" required minlength="10"
+                              placeholder="¿Por qué quieres adoptar?"></textarea>
                     <small class="field-error" th:if="${#fields.hasErrors('motivacion')}" th:errors="*{motivacion}"></small>
                 </div>
-                <div class="float-field">
-                    <input id="vivienda" th:field="*{vivienda}" required placeholder=" ">
+                <div class="field full">
                     <label for="vivienda">Tipo de vivienda *</label>
+                    <input id="vivienda" th:field="*{vivienda}" required
+                           placeholder="Ej. Casa con patio / Apartamento">
                     <small class="field-error" th:if="${#fields.hasErrors('vivienda')}" th:errors="*{vivienda}"></small>
                 </div>
 
@@ -68,7 +76,7 @@
                     </label>
                     <div class="guide-box" id="guiaSinExperiencia" hidden>
                         <strong>Si aún no tienes experiencia</strong>
-                        <p>No hay problema: te acompañamos. Te pediremos más orientación del voluntario y te recomendamos la guía de primeros días (espacio seguro, veterinario y rutinas cortas).</p>
+                        <p>No hay problema: te acompañamos. Te pediremos más orientación del voluntario y te recomendamos la guía de primeros días.</p>
                         <a class="auth-link" th:href="@{/como-adoptar}" target="_blank">Ver guía de adopción</a>
                     </div>
                     <div class="guide-box guide-ok" id="guiaConExperiencia" hidden>
@@ -83,7 +91,7 @@
                 </label>
                 <small class="field-error full" th:if="${#fields.hasErrors('aceptaTerminos')}" th:errors="*{aceptaTerminos}"></small>
 
-                <button class="btn btn-primary btn-block btn-pulse full" type="submit">Crear cuenta</button>
+                <button class="btn btn-primary btn-block full" type="submit">Crear cuenta</button>
             </form>
             <a class="auth-link" th:href="@{/login}">¿Ya tienes cuenta? Inicia sesión</a>
         </div>

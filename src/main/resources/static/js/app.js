@@ -49,16 +49,4 @@ document.addEventListener("DOMContentLoaded", () => {
     experiencia.addEventListener("change", syncExperiencia);
     syncExperiencia();
   }
-
-  document.querySelectorAll(".btn, .card, .auth-demo span").forEach((el) => {
-    el.addEventListener("mousemove", (event) => {
-      const rect = el.getBoundingClientRect();
-      const x = ((event.clientX - rect.left) / rect.width - 0.5) * 6;
-      const y = ((event.clientY - rect.top) / rect.height - 0.5) * 6;
-      el.style.translate = `${x}px ${y}px`;
-    });
-    el.addEventListener("mouseleave", () => {
-      el.style.translate = "0px 0px";
-    });
-  });
 });
