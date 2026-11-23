@@ -41,9 +41,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleGeneral(Exception ex, Model model) {
-        log.error("Error no controlado", ex);
+        log.error("Error no controlado: {}", ex.toString(), ex);
+        String detalle = ex.getMessage();
+        if (detalle == null || detalle.isBlank()) {
+            detalle = ex.getClass().getSimpleName();
+        }
         model.addAttribute("titulo", "Error inesperado");
-        model.addAttribute("mensaje", "Ocurrió un problema al procesar la solicitud. Si subías una foto, prueba con JPG/PNG más liviano (menos de 5 MB).");
+        model.addAttribute("mensaje",
+                "No se pudo guardar. Usa una foto JPG o PNG (no HEIC) de máximo 5 MB. Detalle: " + detalle);
         return "error/general";
     }
 }

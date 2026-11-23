@@ -68,6 +68,7 @@ public class SecurityConfig {
                                 paths.matcher("/css/**"),
                                 paths.matcher("/js/**"),
                                 paths.matcher("/img/**"),
+                                paths.matcher("/uploads/**"),
                                 paths.matcher("/favicon.ico"),
                                 paths.matcher("/mascotas/catalogo"),
                                 paths.matcher("/mascotas/detalle/**")
