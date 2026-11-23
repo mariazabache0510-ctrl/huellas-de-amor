@@ -7,6 +7,7 @@
     <div class="container">
         <div class="panel" style="max-width:720px;margin:auto">
             <h1 class="section-title" th:text="${mascota.id == null} ? 'Nueva mascota' : 'Editar mascota'"></h1>
+            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
             <form th:object="${mascota}"
                   th:action="${mascota.id == null} ? @{/mascotas/gestionar} : @{/mascotas/gestionar/{id}(id=${mascota.id})}"
                   method="post"
@@ -26,7 +27,7 @@
 
                 <div class="photo-upload">
                     <label for="fotoArchivo">Cargar foto desde tu computador</label>
-                    <p class="hint">Elige un archivo JPG, PNG, WEBP o GIF (máx. 2 MB). Si también pegas una URL, el archivo tiene prioridad.</p>
+                    <p class="hint">Usa JPG o PNG (máx. 5 MB). Evita HEIC de iPhone. Si también pegas una URL, el archivo tiene prioridad.</p>
                     <input id="fotoArchivo" class="file-input-visible" type="file" name="fotoArchivo"
                            accept="image/jpeg,image/png,image/webp,image/gif">
                     <small class="hint" id="fotoNombre">Ningún archivo seleccionado</small>

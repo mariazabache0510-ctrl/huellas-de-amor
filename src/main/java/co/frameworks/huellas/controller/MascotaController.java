@@ -74,12 +74,19 @@ public class MascotaController {
             aplicarFoto(dto, fotoArchivo, null);
         } catch (NegocioException ex) {
             result.rejectValue("fotoUrl", "foto", ex.getMessage());
+            model.addAttribute("error", ex.getMessage());
         }
         if (result.hasErrors()) {
             cargarForm(model, dto);
             return "mascotas/form";
         }
-        mascotaService.crear(dto);
+        try {
+            mascotaService.crear(dto);
+        } catch (RuntimeException ex) {
+            model.addAttribute("error", "No se pudo guardar la mascota. Revisa la foto (JPG/PNG liviano) e inténtalo de nuevo.");
+            cargarForm(model, dto);
+            return "mascotas/form";
+        }
         ra.addFlashAttribute("exito", "Mascota registrada correctamente");
         return "redirect:/mascotas/gestionar";
     }
@@ -102,12 +109,19 @@ public class MascotaController {
             aplicarFoto(dto, fotoArchivo, actual.getFotoUrl());
         } catch (NegocioException ex) {
             result.rejectValue("fotoUrl", "foto", ex.getMessage());
+            model.addAttribute("error", ex.getMessage());
         }
         if (result.hasErrors()) {
             cargarForm(model, dto);
             return "mascotas/form";
         }
-        mascotaService.actualizar(id, dto);
+        try {
+            mascotaService.actualizar(id, dto);
+        } catch (RuntimeException ex) {
+            model.addAttribute("error", "No se pudo actualizar la mascota. Revisa la foto (JPG/PNG liviano) e inténtalo de nuevo.");
+            cargarForm(model, dto);
+            return "mascotas/form";
+        }
         ra.addFlashAttribute("exito", "Mascota actualizada");
         return "redirect:/mascotas/gestionar";
     }

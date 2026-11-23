@@ -44,6 +44,7 @@ public class DataInitializer {
                                 JdbcTemplate jdbcTemplate) {
         return args -> {
             limpiarTablasPerfilAntiguas(jdbcTemplate);
+            asegurarColumnaFotoTexto(jdbcTemplate);
             if (usuarioRepository.count() == 0) {
                 seedBase(usuarioRepository, refugioRepository, especieRepository, mascotaRepository, encoder);
             }
@@ -60,6 +61,14 @@ public class DataInitializer {
             jdbc.execute("DROP TABLE IF EXISTS voluntarios CASCADE");
         } catch (Exception ignored) {
             // Si el motor no permite DROP en este momento, ddl-auto sigue operando
+        }
+    }
+
+    private void asegurarColumnaFotoTexto(JdbcTemplate jdbc) {
+        try {
+            jdbc.execute("ALTER TABLE mascotas ALTER COLUMN foto_url TYPE TEXT");
+        } catch (Exception ignored) {
+            // Ya es TEXT o el motor no requiere el cambio
         }
     }
 
