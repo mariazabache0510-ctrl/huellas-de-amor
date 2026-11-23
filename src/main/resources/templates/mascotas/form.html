@@ -9,7 +9,8 @@
             <h1 class="section-title" th:text="${mascota.id == null} ? 'Nueva mascota' : 'Editar mascota'"></h1>
             <form th:object="${mascota}"
                   th:action="${mascota.id == null} ? @{/mascotas/gestionar} : @{/mascotas/gestionar/{id}(id=${mascota.id})}"
-                  method="post">
+                  method="post"
+                  enctype="multipart/form-data">
                 <label>Nombre</label>
                 <input th:field="*{nombre}" required>
                 <label>Especie</label>
@@ -22,8 +23,21 @@
                 <input type="number" th:field="*{edad}" min="0">
                 <label>Estado de salud</label>
                 <input th:field="*{estadoSalud}">
-                <label>URL de foto</label>
-                <input th:field="*{fotoUrl}">
+
+                <div class="photo-upload">
+                    <label>Foto de la mascota</label>
+                    <p class="hint">Puedes elegir un archivo de tu computador o pegar una URL. Si subes archivo, tiene prioridad (máx. 2 MB).</p>
+                    <label class="file-label" for="fotoArchivo">Seleccionar archivo</label>
+                    <input id="fotoArchivo" type="file" name="fotoArchivo" accept="image/jpeg,image/png,image/webp,image/gif">
+                    <small class="hint" id="fotoNombre">Ningún archivo seleccionado</small>
+                    <label for="fotoUrl" style="margin-top:0.9rem">URL de foto (opcional)</label>
+                    <input id="fotoUrl" th:field="*{fotoUrl}" placeholder="https://...">
+                    <small class="field-error" th:if="${#fields.hasErrors('fotoUrl')}" th:errors="*{fotoUrl}"></small>
+                    <div class="photo-preview" th:if="${mascota.fotoUrl != null and !#strings.isEmpty(mascota.fotoUrl)}">
+                        <img th:src="${mascota.fotoUrl}" alt="Vista previa" onerror="this.style.display='none'">
+                    </div>
+                </div>
+
                 <label>Estado</label>
                 <select th:field="*{estado}">
                     <option th:each="est : ${estados}" th:value="${est}" th:text="${est}"></option>
@@ -34,10 +48,20 @@
                 </select>
                 <label>Descripción</label>
                 <textarea th:field="*{descripcion}" rows="4"></textarea>
-                <button class="btn btn-primary" type="submit">Guardar</button>
+                <div class="actions" style="margin-top:1rem">
+                    <button class="btn btn-primary" type="submit">Guardar</button>
+                    <a class="btn btn-secondary" th:href="@{/admin(tab='mascotas')}">Volver al panel</a>
+                </div>
             </form>
         </div>
     </div>
 </section>
+<script>
+  document.getElementById('fotoArchivo')?.addEventListener('change', (e) => {
+    const file = e.target.files?.[0];
+    const label = document.getElementById('fotoNombre');
+    if (label) label.textContent = file ? file.name : 'Ningún archivo seleccionado';
+  });
+</script>
 </body>
 </html>

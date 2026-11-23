@@ -743,6 +743,58 @@ tr:hover { background: rgba(47, 143, 107, 0.06); }
 .guide-box p { margin: 0.35rem 0 0.55rem; color: var(--muted); font-size: 0.92rem; }
 .guide-ok { border-style: solid; border-color: rgba(47, 143, 107, 0.45); }
 
+.photo-upload {
+  margin: 0.4rem 0 1rem;
+  padding: 1rem;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.photo-upload input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.file-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.35rem 0 0.5rem;
+  padding: 0.7rem 1.1rem;
+  border-radius: 999px;
+  background: white;
+  border: 1px solid var(--line);
+  color: var(--forest);
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.file-label:hover {
+  border-color: rgba(47, 143, 107, 0.4);
+  box-shadow: 0 8px 18px rgba(15, 61, 46, 0.08);
+}
+
+.photo-preview {
+  margin-top: 0.85rem;
+  width: min(220px, 100%);
+  aspect-ratio: 1;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #cfe8db;
+}
+
+.photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;

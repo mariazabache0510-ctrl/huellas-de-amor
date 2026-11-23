@@ -22,7 +22,10 @@
                 <input th:field="*{telefono}">
                 <label>Descripción</label>
                 <textarea th:field="*{descripcion}" rows="3"></textarea>
-                <button class="btn btn-primary" type="submit">Guardar</button>
+                <div class="actions" style="margin-top:1rem">
+                    <button class="btn btn-primary" type="submit">Guardar</button>
+                    <a class="btn btn-secondary" th:href="@{/admin(tab='refugios')}">Volver al panel</a>
+                </div>
             </form>
         </div>
     </div>

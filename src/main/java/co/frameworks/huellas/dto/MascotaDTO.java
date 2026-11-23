@@ -32,7 +32,6 @@ public class MascotaDTO {
     @Size(max = 200)
     private String estadoSalud;
 
-    @Size(max = 250)
     private String fotoUrl;
 
     @NotNull(message = "El estado es obligatorio")

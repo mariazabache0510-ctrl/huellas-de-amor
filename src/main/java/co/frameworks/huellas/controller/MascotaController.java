@@ -1,8 +1,10 @@
 package co.frameworks.huellas.controller;
 
 import co.frameworks.huellas.dto.MascotaDTO;
+import co.frameworks.huellas.exception.NegocioException;
 import co.frameworks.huellas.model.EstadoMascota;
 import co.frameworks.huellas.repository.EspecieRepository;
+import co.frameworks.huellas.service.FotoStorageService;
 import co.frameworks.huellas.service.MascotaService;
 import co.frameworks.huellas.service.RefugioService;
 import jakarta.validation.Valid;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -21,6 +24,7 @@ public class MascotaController {
     private final MascotaService mascotaService;
     private final RefugioService refugioService;
     private final EspecieRepository especieRepository;
+    private final FotoStorageService fotoStorageService;
 
     @GetMapping("/catalogo")
     public String catalogo(@RequestParam(required = false) Long refugioId,
@@ -63,8 +67,14 @@ public class MascotaController {
     @PostMapping("/gestionar")
     public String crear(@Valid @ModelAttribute("mascota") MascotaDTO dto,
                         BindingResult result,
+                        @RequestParam(value = "fotoArchivo", required = false) MultipartFile fotoArchivo,
                         Model model,
                         RedirectAttributes ra) {
+        try {
+            aplicarFoto(dto, fotoArchivo, null);
+        } catch (NegocioException ex) {
+            result.rejectValue("fotoUrl", "foto", ex.getMessage());
+        }
         if (result.hasErrors()) {
             cargarForm(model, dto);
             return "mascotas/form";
@@ -84,8 +94,15 @@ public class MascotaController {
     public String actualizar(@PathVariable Long id,
                              @Valid @ModelAttribute("mascota") MascotaDTO dto,
                              BindingResult result,
+                             @RequestParam(value = "fotoArchivo", required = false) MultipartFile fotoArchivo,
                              Model model,
                              RedirectAttributes ra) {
+        MascotaDTO actual = mascotaService.obtener(id);
+        try {
+            aplicarFoto(dto, fotoArchivo, actual.getFotoUrl());
+        } catch (NegocioException ex) {
+            result.rejectValue("fotoUrl", "foto", ex.getMessage());
+        }
         if (result.hasErrors()) {
             cargarForm(model, dto);
             return "mascotas/form";
@@ -100,6 +117,15 @@ public class MascotaController {
         mascotaService.eliminar(id);
         ra.addFlashAttribute("exito", "Mascota eliminada");
         return "redirect:/mascotas/gestionar";
+    }
+
+    private void aplicarFoto(MascotaDTO dto, MultipartFile fotoArchivo, String fotoActual) {
+        String resuelta = fotoStorageService.resolverFoto(fotoArchivo, dto.getFotoUrl());
+        if (resuelta != null) {
+            dto.setFotoUrl(resuelta);
+        } else if (fotoActual != null) {
+            dto.setFotoUrl(fotoActual);
+        }
     }
 
     private void cargarForm(Model model, MascotaDTO dto) {

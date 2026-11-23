@@ -31,7 +31,7 @@ public class Mascota {
     @Column(name = "estado_salud", length = 200)
     private String estadoSalud;
 
-    @Column(name = "foto_url", length = 250)
+    @Column(name = "foto_url", columnDefinition = "TEXT")
     private String fotoUrl;
 
     @Enumerated(EnumType.STRING)
