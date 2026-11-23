@@ -55,6 +55,14 @@
                     <a class="btn btn-secondary" th:href="@{/admin(tab='mascotas')}">Volver al panel</a>
                 </div>
             </form>
+            <form th:if="${mascota.id != null}"
+                  th:action="@{/mascotas/gestionar/{id}/eliminar(id=${mascota.id})}"
+                  method="post"
+                  style="margin-top:1rem"
+                  onsubmit="return confirm('¿Eliminar esta mascota? Esta acción no se puede deshacer.');">
+                <input type="hidden" name="volver" value="admin">
+                <button class="btn btn-danger" type="submit">Eliminar mascota</button>
+            </form>
         </div>
     </div>
 </section>

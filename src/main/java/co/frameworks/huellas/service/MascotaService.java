@@ -7,9 +7,11 @@ import co.frameworks.huellas.model.EstadoMascota;
 import co.frameworks.huellas.model.Especie;
 import co.frameworks.huellas.model.Mascota;
 import co.frameworks.huellas.model.Refugio;
+import co.frameworks.huellas.repository.AdopcionRepository;
 import co.frameworks.huellas.repository.EspecieRepository;
 import co.frameworks.huellas.repository.MascotaRepository;
 import co.frameworks.huellas.repository.RefugioRepository;
+import co.frameworks.huellas.repository.SeguimientoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,8 @@ public class MascotaService {
     private final MascotaRepository mascotaRepository;
     private final EspecieRepository especieRepository;
     private final RefugioRepository refugioRepository;
+    private final AdopcionRepository adopcionRepository;
+    private final SeguimientoRepository seguimientoRepository;
     private final MascotaMapper mascotaMapper;
 
     @Transactional(readOnly = true)
@@ -103,6 +107,8 @@ public class MascotaService {
         if (!mascotaRepository.existsById(id)) {
             throw new RecursoNoEncontradoException("Mascota no encontrada: " + id);
         }
+        seguimientoRepository.deleteByMascotaId(id);
+        adopcionRepository.deleteByMascotaId(id);
         mascotaRepository.deleteById(id);
     }
 

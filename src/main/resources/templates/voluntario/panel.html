@@ -60,6 +60,14 @@
                         <span class="badge" th:text="${m.estado}"></span>
                         <h3 th:text="${m.nombre}"></h3>
                         <p class="meta" th:text="${m.especieNombre} + ' · ' + ${m.raza}"></p>
+                        <div class="actions" style="margin-top:0.75rem">
+                            <a class="btn btn-secondary" th:href="@{/mascotas/gestionar/{id}/editar(id=${m.id})}">Editar</a>
+                            <form th:action="@{/mascotas/gestionar/{id}/eliminar(id=${m.id})}" method="post"
+                                  onsubmit="return confirm('¿Eliminar esta mascota? Esta acción no se puede deshacer.');">
+                                <input type="hidden" name="volver" value="voluntario">
+                                <button class="btn btn-danger" type="submit">Eliminar</button>
+                            </form>
+                        </div>
                     </div>
                 </article>
             </div>

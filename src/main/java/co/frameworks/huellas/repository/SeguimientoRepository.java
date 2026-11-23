@@ -25,4 +25,6 @@ public interface SeguimientoRepository extends JpaRepository<SeguimientoPostAdop
             ORDER BY s.fechaVisita DESC
             """)
     List<SeguimientoPostAdopcion> findByAdoptanteUsername(@Param("username") String username);
+
+    void deleteByMascotaId(Long mascotaId);
 }

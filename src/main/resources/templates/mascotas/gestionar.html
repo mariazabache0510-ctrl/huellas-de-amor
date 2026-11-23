@@ -23,7 +23,9 @@
                     <td><span class="badge" th:text="${m.estado}"></span></td>
                     <td class="actions">
                         <a class="btn btn-secondary" th:href="@{/mascotas/gestionar/{id}/editar(id=${m.id})}">Editar</a>
-                        <form th:action="@{/mascotas/gestionar/{id}/eliminar(id=${m.id})}" method="post">
+                        <form th:action="@{/mascotas/gestionar/{id}/eliminar(id=${m.id})}" method="post"
+                              onsubmit="return confirm('¿Eliminar esta mascota? Esta acción no se puede deshacer.');">
+                            <input type="hidden" name="volver" value="gestionar">
                             <button class="btn btn-danger" type="submit">Eliminar</button>
                         </form>
                     </td>

@@ -43,4 +43,6 @@ public interface AdopcionRepository extends JpaRepository<Adopcion, Long> {
     List<Adopcion> findByEstado(EstadoAdopcion estado);
 
     boolean existsByMascotaIdAndEstado(Long mascotaId, EstadoAdopcion estado);
+
+    void deleteByMascotaId(Long mascotaId);
 }

@@ -127,10 +127,18 @@ public class MascotaController {
     }
 
     @PostMapping("/gestionar/{id}/eliminar")
-    public String eliminar(@PathVariable Long id, RedirectAttributes ra) {
+    public String eliminar(@PathVariable Long id,
+                           @RequestParam(required = false, defaultValue = "admin") String volver,
+                           RedirectAttributes ra) {
         mascotaService.eliminar(id);
         ra.addFlashAttribute("exito", "Mascota eliminada");
-        return "redirect:/mascotas/gestionar";
+        if ("gestionar".equals(volver)) {
+            return "redirect:/mascotas/gestionar";
+        }
+        if ("voluntario".equals(volver)) {
+            return "redirect:/voluntario?tab=mascotas";
+        }
+        return "redirect:/admin?tab=mascotas";
     }
 
     private void aplicarFoto(MascotaDTO dto, MultipartFile fotoArchivo, String fotoActual) {

@@ -7,6 +7,7 @@
     <div class="container">
         <h1 class="section-title">Panel de administración</h1>
         <p class="section-lead">Autogestión completa: métricas, mascotas, refugios, adopciones y seguimientos en un solo lugar.</p>
+        <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
 
         <div class="admin-tabs">
             <a th:href="@{/admin(tab='resumen')}" th:classappend="${tab == 'resumen'} ? ' is-active'">Resumen</a>
@@ -62,7 +63,7 @@
             <div class="panel table-wrap" th:if="${!#lists.isEmpty(mascotas)}">
                 <table>
                     <thead>
-                    <tr><th>Nombre</th><th>Especie</th><th>Raza</th><th>Edad</th><th>Estado</th><th>Refugio</th><th></th></tr>
+                    <tr><th>Nombre</th><th>Especie</th><th>Raza</th><th>Edad</th><th>Estado</th><th>Refugio</th><th>Acciones</th></tr>
                     </thead>
                     <tbody>
                     <tr th:each="m : ${mascotas}">
@@ -72,7 +73,14 @@
                         <td th:text="${m.edad}"></td>
                         <td><span class="badge" th:text="${m.estado}"></span></td>
                         <td th:text="${m.refugioNombre}"></td>
-                        <td><a class="btn btn-secondary" th:href="@{/mascotas/gestionar/{id}/editar(id=${m.id})}">Editar</a></td>
+                        <td class="actions">
+                            <a class="btn btn-secondary" th:href="@{/mascotas/gestionar/{id}/editar(id=${m.id})}">Editar</a>
+                            <form th:action="@{/mascotas/gestionar/{id}/eliminar(id=${m.id})}" method="post"
+                                  onsubmit="return confirm('¿Eliminar esta mascota? Esta acción no se puede deshacer.');">
+                                <input type="hidden" name="volver" value="admin">
+                                <button class="btn btn-danger" type="submit">Eliminar</button>
+                            </form>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
