@@ -68,4 +68,6 @@ co.frameworks.huellas
 
 ## Entidades
 
-`Usuario`, `Refugio`, `Especie`, `Mascota`, `Adoptante`, `Voluntario`, `Adopcion`, `SeguimientoPostAdopcion`
+`Usuario` (con enum **`Rol`**: ADMIN / VOLUNTARIO / ADOPTANTE), `Refugio`, `Especie`, `Mascota`, `Adopcion`, `SeguimientoPostAdopcion`
+
+No hay entidades separadas Adoptante/Voluntario/Admin: el tipo de usuario se define solo con `Usuario.rol`.

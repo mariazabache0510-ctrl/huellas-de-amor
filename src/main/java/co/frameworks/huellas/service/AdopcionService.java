@@ -5,9 +5,8 @@ import co.frameworks.huellas.exception.NegocioException;
 import co.frameworks.huellas.exception.RecursoNoEncontradoException;
 import co.frameworks.huellas.model.*;
 import co.frameworks.huellas.repository.AdopcionRepository;
-import co.frameworks.huellas.repository.AdoptanteRepository;
 import co.frameworks.huellas.repository.MascotaRepository;
-import co.frameworks.huellas.repository.VoluntarioRepository;
+import co.frameworks.huellas.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +21,7 @@ public class AdopcionService {
 
     private final AdopcionRepository adopcionRepository;
     private final MascotaRepository mascotaRepository;
-    private final AdoptanteRepository adoptanteRepository;
-    private final VoluntarioRepository voluntarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
     @Transactional(readOnly = true)
     public List<AdopcionDTO> listar() {
@@ -47,8 +45,11 @@ public class AdopcionService {
         if (mascota.getEstado() != EstadoMascota.DISPONIBLE) {
             throw new NegocioException("La mascota no está disponible para adopción");
         }
-        Adoptante adoptante = adoptanteRepository.findByUsername(username)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Perfil de adoptante no encontrado"));
+        Usuario adoptante = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado"));
+        if (adoptante.getRol() != Rol.ADOPTANTE) {
+            throw new NegocioException("Solo un usuario con rol ADOPTANTE puede solicitar adopción");
+        }
 
         if (adopcionRepository.existsByMascotaIdAndEstado(mascotaId, EstadoAdopcion.PENDIENTE)) {
             throw new NegocioException("Ya existe una solicitud pendiente para esta mascota");
@@ -73,7 +74,7 @@ public class AdopcionService {
             throw new NegocioException("Solo se pueden resolver solicitudes pendientes");
         }
 
-        Voluntario voluntario = voluntarioRepository.findByUsername(usernameVoluntario).orElse(null);
+        Usuario voluntario = usuarioRepository.findByUsername(usernameVoluntario).orElse(null);
         adopcion.setVoluntario(voluntario);
         adopcion.setEstado(nuevoEstado);
         if (observaciones != null && !observaciones.isBlank()) {
@@ -95,11 +96,9 @@ public class AdopcionService {
                 .mascotaId(a.getMascota() != null ? a.getMascota().getId() : null)
                 .mascotaNombre(a.getMascota() != null ? a.getMascota().getNombre() : null)
                 .adoptanteId(a.getAdoptante() != null ? a.getAdoptante().getId() : null)
-                .adoptanteNombre(a.getAdoptante() != null && a.getAdoptante().getUsuario() != null
-                        ? a.getAdoptante().getUsuario().getNombre() : null)
+                .adoptanteNombre(a.getAdoptante() != null ? a.getAdoptante().getNombre() : null)
                 .voluntarioId(a.getVoluntario() != null ? a.getVoluntario().getId() : null)
-                .voluntarioNombre(a.getVoluntario() != null && a.getVoluntario().getUsuario() != null
-                        ? a.getVoluntario().getUsuario().getNombre() : null)
+                .voluntarioNombre(a.getVoluntario() != null ? a.getVoluntario().getNombre() : null)
                 .fechaSolicitud(a.getFechaSolicitud())
                 .estado(a.getEstado())
                 .observaciones(a.getObservaciones())

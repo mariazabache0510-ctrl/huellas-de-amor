@@ -22,9 +22,10 @@ public class SeguimientoPostAdopcion {
     @JoinColumn(name = "id_mascota", nullable = false)
     private Mascota mascota;
 
+    /** Usuario con rol ADOPTANTE */
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_adoptante", nullable = false)
-    private Adoptante adoptante;
+    @JoinColumn(name = "id_usuario_adoptante", nullable = false)
+    private Usuario adoptante;
 
     @Column(name = "fecha_visita", nullable = false)
     private LocalDate fechaVisita;

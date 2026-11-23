@@ -22,13 +22,15 @@ public class Adopcion {
     @JoinColumn(name = "id_mascota", nullable = false)
     private Mascota mascota;
 
+    /** Usuario con rol ADOPTANTE */
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_adoptante", nullable = false)
-    private Adoptante adoptante;
+    @JoinColumn(name = "id_usuario_adoptante", nullable = false)
+    private Usuario adoptante;
 
+    /** Usuario con rol VOLUNTARIO o ADMIN que resuelve la solicitud */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_voluntario")
-    private Voluntario voluntario;
+    @JoinColumn(name = "id_usuario_voluntario")
+    private Usuario voluntario;
 
     @Column(name = "fecha_solicitud", nullable = false)
     private LocalDate fechaSolicitud;

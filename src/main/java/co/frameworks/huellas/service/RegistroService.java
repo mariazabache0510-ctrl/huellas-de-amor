@@ -2,10 +2,8 @@ package co.frameworks.huellas.service;
 
 import co.frameworks.huellas.dto.RegistroAdoptanteDTO;
 import co.frameworks.huellas.exception.NegocioException;
-import co.frameworks.huellas.model.Adoptante;
 import co.frameworks.huellas.model.Rol;
 import co.frameworks.huellas.model.Usuario;
-import co.frameworks.huellas.repository.AdoptanteRepository;
 import co.frameworks.huellas.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class RegistroService {
 
     private final UsuarioRepository usuarioRepository;
-    private final AdoptanteRepository adoptanteRepository;
     private final PasswordEncoder passwordEncoder;
 
     public void registrarAdoptante(RegistroAdoptanteDTO dto) {
@@ -37,16 +34,11 @@ public class RegistroService {
                 .rol(Rol.ADOPTANTE)
                 .telefono(dto.getTelefono())
                 .direccion(dto.getDireccion())
-                .activo(true)
-                .build();
-        usuarioRepository.save(usuario);
-
-        Adoptante adoptante = Adoptante.builder()
-                .usuario(usuario)
                 .motivacion(dto.getMotivacion())
                 .tieneExperiencia(dto.isTieneExperiencia())
                 .vivienda(dto.getVivienda())
+                .activo(true)
                 .build();
-        adoptanteRepository.save(adoptante);
+        usuarioRepository.save(usuario);
     }
 }

@@ -20,6 +20,13 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     List<Usuario> findByRol(Rol rol);
 
+    @Query("""
+            SELECT u FROM Usuario u
+            WHERE u.rol = co.frameworks.huellas.model.Rol.ADOPTANTE AND u.activo = true
+            ORDER BY u.nombre ASC
+            """)
+    List<Usuario> findAdoptantesActivos();
+
     @Query("SELECT u FROM Usuario u WHERE u.activo = true ORDER BY u.nombre ASC")
     List<Usuario> findActivosOrdenados();
 }

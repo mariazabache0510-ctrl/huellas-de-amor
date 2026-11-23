@@ -16,10 +16,8 @@ public interface AdopcionRepository extends JpaRepository<Adopcion, Long> {
             JOIN FETCH a.mascota m
             JOIN FETCH m.especie
             JOIN FETCH m.refugio
-            JOIN FETCH a.adoptante ad
-            JOIN FETCH ad.usuario
-            LEFT JOIN FETCH a.voluntario v
-            LEFT JOIN FETCH v.usuario
+            JOIN FETCH a.adoptante
+            LEFT JOIN FETCH a.voluntario
             WHERE a.id = :id
             """)
     Optional<Adopcion> findDetalleById(@Param("id") Long id);
@@ -27,8 +25,7 @@ public interface AdopcionRepository extends JpaRepository<Adopcion, Long> {
     @Query("""
             SELECT a FROM Adopcion a
             JOIN FETCH a.mascota m
-            JOIN FETCH a.adoptante ad
-            JOIN FETCH ad.usuario
+            JOIN FETCH a.adoptante
             LEFT JOIN FETCH a.voluntario
             ORDER BY a.fechaSolicitud DESC
             """)
@@ -37,8 +34,7 @@ public interface AdopcionRepository extends JpaRepository<Adopcion, Long> {
     @Query("""
             SELECT a FROM Adopcion a
             JOIN FETCH a.mascota m
-            JOIN FETCH a.adoptante ad
-            JOIN FETCH ad.usuario u
+            JOIN FETCH a.adoptante u
             WHERE u.username = :username
             ORDER BY a.fechaSolicitud DESC
             """)

@@ -12,10 +12,10 @@
                 <select th:field="*{mascotaId}" required>
                     <option th:each="m : ${mascotas}" th:value="${m.id}" th:text="${m.nombre}"></option>
                 </select>
-                <label>Adoptante</label>
+                <label>Adoptante (usuario con rol ADOPTANTE)</label>
                 <select th:field="*{adoptanteId}" required>
                     <option th:each="a : ${adoptantes}" th:value="${a.id}"
-                            th:text="${a.usuario != null ? a.usuario.nombre : a.id}"></option>
+                            th:text="${a.nombre + ' (@' + a.username + ')'}"></option>
                 </select>
                 <label>Fecha de visita</label>
                 <input type="date" th:field="*{fechaVisita}" required>

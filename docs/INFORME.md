@@ -5,9 +5,10 @@ Proyecto final de Frameworks. Aplicación full stack para adopción responsable 
 ## 1. Contexto del problema (B1)
 
 ### Actores
-- **Adoptantes**: personas que buscan un compañero animal.
-- **Voluntarios**: acompañan solicitudes, inventario y seguimiento postadopción.
-- **Administradores**: autogestionan el sistema (métricas, CRUD, KPIs).
+Los actores del sistema se modelan con una sola entidad de cuenta (`Usuario`) y un único discriminador **`Rol`** (`ADMIN`, `VOLUNTARIO`, `ADOPTANTE`). No existen entidades separadas “Admin / Adoptante / Voluntario”.
+- **Adoptantes** (`Rol.ADOPTANTE`): personas que buscan un compañero animal.
+- **Voluntarios** (`Rol.VOLUNTARIO`): acompañan solicitudes, inventario y seguimiento postadopción.
+- **Administradores** (`Rol.ADMIN`): autogestionan el sistema (métricas, CRUD, KPIs).
 - **Refugios**: puntos de acogida físicos aliados.
 
 ### Problema
@@ -64,31 +65,27 @@ Fuera de alcance: pagos, app móvil nativa, marketplace de insumos.
 
 ```mermaid
 erDiagram
-    USUARIOS ||--o| ADOPTANTES : "1:0..1"
-    USUARIOS ||--o| VOLUNTARIOS : "1:0..1"
-    REFUGIOS ||--o{ VOLUNTARIOS : tiene
+    USUARIOS ||--o{ ADOPCIONES : "adoptante"
+    USUARIOS ||--o{ ADOPCIONES : "voluntario"
+    USUARIOS }o--|| REFUGIOS : "opcional si VOLUNTARIO"
     REFUGIOS ||--o{ MASCOTAS : alberga
     ESPECIES ||--o{ MASCOTAS : clasifica
     MASCOTAS ||--o{ ADOPCIONES : solicita
-    ADOPTANTES ||--o{ ADOPCIONES : realiza
-    VOLUNTARIOS ||--o{ ADOPCIONES : resuelve
     MASCOTAS ||--o{ SEGUIMIENTOS : recibe
-    ADOPTANTES ||--o{ SEGUIMIENTOS : participa
+    USUARIOS ||--o{ SEGUIMIENTOS : "adoptante"
 ```
 
 ### Diccionario (resumen)
 | Tabla | PK | FK / notas |
 |-------|----|------------|
-| usuarios | id | rol ENUM, password BCrypt |
-| adoptantes | id | id_usuario → usuarios |
-| voluntarios | id | id_usuario → usuarios, id_refugio → refugios |
+| usuarios | id | **rol** ENUM (ADMIN/VOLUNTARIO/ADOPTANTE), password BCrypt; campos de perfil (motivación, experiencia, vivienda, especialidad, id_refugio) según rol |
 | refugios | id | contacto, dirección |
 | especies | id | Perro / Gato |
 | mascotas | id | id_especie, id_refugio, estado |
-| adopciones | id | id_mascota, id_adoptante, id_voluntario?, estado |
-| seguimientos_post_adopcion | id | id_mascota, id_adoptante |
+| adopciones | id | id_mascota, id_usuario_adoptante, id_usuario_voluntario?, estado |
+| seguimientos_postadopcion | id | id_mascota, id_usuario_adoptante |
 
-Normalización: 3FN (atributos atómicos, sin grupos repetitivos; relaciones N:1 hacia especies/refugios).
+Normalización: 3FN. El discriminador de comportamiento es el atributo `rol` en `usuarios` (no tablas hijas por tipo de usuario).
 
 ## 4. Endpoints / rutas MVC (B4)
 

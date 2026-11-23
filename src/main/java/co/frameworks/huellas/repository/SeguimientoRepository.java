@@ -12,8 +12,7 @@ public interface SeguimientoRepository extends JpaRepository<SeguimientoPostAdop
     @Query("""
             SELECT s FROM SeguimientoPostAdopcion s
             JOIN FETCH s.mascota m
-            JOIN FETCH s.adoptante a
-            JOIN FETCH a.usuario
+            JOIN FETCH s.adoptante
             ORDER BY s.fechaVisita DESC
             """)
     List<SeguimientoPostAdopcion> findAllConDetalle();
@@ -21,8 +20,7 @@ public interface SeguimientoRepository extends JpaRepository<SeguimientoPostAdop
     @Query("""
             SELECT s FROM SeguimientoPostAdopcion s
             JOIN FETCH s.mascota m
-            JOIN FETCH s.adoptante a
-            JOIN FETCH a.usuario u
+            JOIN FETCH s.adoptante u
             WHERE u.username = :username
             ORDER BY s.fechaVisita DESC
             """)

@@ -1,8 +1,8 @@
 package co.frameworks.huellas.controller;
 
 import co.frameworks.huellas.dto.SeguimientoDTO;
-import co.frameworks.huellas.repository.AdoptanteRepository;
 import co.frameworks.huellas.repository.MascotaRepository;
+import co.frameworks.huellas.repository.UsuarioRepository;
 import co.frameworks.huellas.service.SeguimientoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class SeguimientoController {
 
     private final SeguimientoService seguimientoService;
     private final MascotaRepository mascotaRepository;
-    private final AdoptanteRepository adoptanteRepository;
+    private final UsuarioRepository usuarioRepository;
 
     @GetMapping
     public String listar(Model model) {
@@ -31,7 +31,7 @@ public class SeguimientoController {
     public String nuevo(Model model) {
         model.addAttribute("seguimiento", new SeguimientoDTO());
         model.addAttribute("mascotas", mascotaRepository.findAll());
-        model.addAttribute("adoptantes", adoptanteRepository.findAllConUsuario());
+        model.addAttribute("adoptantes", usuarioRepository.findAdoptantesActivos());
         return "seguimientos/form";
     }
 
@@ -42,7 +42,7 @@ public class SeguimientoController {
                         RedirectAttributes ra) {
         if (result.hasErrors()) {
             model.addAttribute("mascotas", mascotaRepository.findAll());
-            model.addAttribute("adoptantes", adoptanteRepository.findAllConUsuario());
+            model.addAttribute("adoptantes", usuarioRepository.findAdoptantesActivos());
             return "seguimientos/form";
         }
         seguimientoService.crear(dto);

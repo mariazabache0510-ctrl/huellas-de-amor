@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Map;
@@ -28,7 +29,6 @@ public class DataInitializer {
             Map.entry("simba", "https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=800&q=80"),
             Map.entry("daisy", "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=800&q=80"),
             Map.entry("oliver", "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?auto=format&fit=crop&w=800&q=80"),
-            Map.entry("luna azul", "https://images.unsplash.com/photo-1495366691023-cc4eadcc2d7e?auto=format&fit=crop&w=800&q=80"),
             Map.entry("thor", "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=80"),
             Map.entry("misha", "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?auto=format&fit=crop&w=800&q=80"),
             Map.entry("canela", "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80"),
@@ -40,13 +40,12 @@ public class DataInitializer {
                                 RefugioRepository refugioRepository,
                                 EspecieRepository especieRepository,
                                 MascotaRepository mascotaRepository,
-                                AdoptanteRepository adoptanteRepository,
-                                VoluntarioRepository voluntarioRepository,
-                                PasswordEncoder encoder) {
+                                PasswordEncoder encoder,
+                                JdbcTemplate jdbcTemplate) {
         return args -> {
+            limpiarTablasPerfilAntiguas(jdbcTemplate);
             if (usuarioRepository.count() == 0) {
-                seedBase(usuarioRepository, refugioRepository, especieRepository, mascotaRepository,
-                        adoptanteRepository, voluntarioRepository, encoder);
+                seedBase(usuarioRepository, refugioRepository, especieRepository, mascotaRepository, encoder);
             }
             if (mascotaRepository.count() < 16) {
                 seedMascotasExtra(especieRepository, refugioRepository, mascotaRepository);
@@ -55,12 +54,20 @@ public class DataInitializer {
         };
     }
 
+    private void limpiarTablasPerfilAntiguas(JdbcTemplate jdbc) {
+        try {
+            jdbc.execute("DROP TABLE IF EXISTS adoptantes CASCADE");
+            jdbc.execute("DROP TABLE IF EXISTS voluntarios CASCADE");
+        } catch (Exception ignored) {
+            // Si el motor no permite DROP en este momento, ddl-auto sigue operando
+        }
+    }
+
     private void corregirFotos(MascotaRepository mascotaRepository) {
         for (Mascota m : mascotaRepository.findAll()) {
             String key = m.getNombre() == null ? "" : m.getNombre().trim().toLowerCase();
             String correcta = FOTOS_CORRECTAS.get(key);
             if (correcta != null && (m.getFotoUrl() == null || !correcta.equals(m.getFotoUrl()))) {
-                // Siempre alinear Coco/Kira y cualquier URL rota conocida
                 boolean sospechosa = m.getFotoUrl() == null
                         || m.getFotoUrl().contains("photo-1495366691023")
                         || m.getFotoUrl().contains("photo-1633722715463")
@@ -78,8 +85,6 @@ public class DataInitializer {
                           RefugioRepository refugioRepository,
                           EspecieRepository especieRepository,
                           MascotaRepository mascotaRepository,
-                          AdoptanteRepository adoptanteRepository,
-                          VoluntarioRepository voluntarioRepository,
                           PasswordEncoder encoder) {
         usuarioRepository.save(Usuario.builder()
                 .nombre("Administrador Huellas")
@@ -119,7 +124,7 @@ public class DataInitializer {
                 .descripcion("Felinos listos para adoptar")
                 .build());
 
-        Usuario volUser = usuarioRepository.save(Usuario.builder()
+        usuarioRepository.save(Usuario.builder()
                 .nombre("Mariana Voluntaria")
                 .username("voluntario")
                 .correo("voluntario@huellasdeamor.com")
@@ -127,16 +132,12 @@ public class DataInitializer {
                 .rol(Rol.VOLUNTARIO)
                 .telefono("3112223344")
                 .direccion("Villavicencio")
+                .especialidad("Acompañamiento de adopciones")
+                .refugio(refugio1)
                 .activo(true)
                 .build());
 
-        voluntarioRepository.save(Voluntario.builder()
-                .usuario(volUser)
-                .refugio(refugio1)
-                .especialidad("Acompañamiento de adopciones")
-                .build());
-
-        Usuario adopUser = usuarioRepository.save(Usuario.builder()
+        usuarioRepository.save(Usuario.builder()
                 .nombre("Sofía Adoptante")
                 .username("adoptante")
                 .correo("adoptante@huellasdeamor.com")
@@ -144,14 +145,10 @@ public class DataInitializer {
                 .rol(Rol.ADOPTANTE)
                 .telefono("3005556677")
                 .direccion("Barrio La Esperanza")
-                .activo(true)
-                .build());
-
-        adoptanteRepository.save(Adoptante.builder()
-                .usuario(adopUser)
                 .motivacion("Busco un compañero leal para mi familia")
                 .tieneExperiencia(true)
                 .vivienda("Casa con patio")
+                .activo(true)
                 .build());
 
         crearMascota(mascotaRepository, "Max", perro, "Labrador", 3,

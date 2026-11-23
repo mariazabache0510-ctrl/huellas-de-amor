@@ -38,6 +38,24 @@ public class Usuario {
     @Column(length = 150)
     private String direccion;
 
+    /** Datos de perfil cuando el rol es ADOPTANTE */
+    @Column(length = 300)
+    private String motivacion;
+
+    @Column(name = "tiene_experiencia")
+    private Boolean tieneExperiencia;
+
+    @Column(length = 100)
+    private String vivienda;
+
+    /** Datos de perfil cuando el rol es VOLUNTARIO */
+    @Column(length = 150)
+    private String especialidad;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_refugio")
+    private Refugio refugio;
+
     @Builder.Default
     @Column(nullable = false)
     private boolean activo = true;
