@@ -59,7 +59,9 @@
                   th:action="@{/mascotas/gestionar/{id}/eliminar(id=${mascota.id})}"
                   method="post"
                   style="margin-top:1rem"
-                  onsubmit="return confirm('¿Eliminar esta mascota? Esta acción no se puede deshacer.');">
+                  data-confirm="¿Segura de eliminar esta mascota? Se quitará del catálogo y no se puede deshacer."
+                  data-confirm-title="Eliminar mascota"
+                  data-confirm-ok="Sí, eliminar">
                 <input type="hidden" name="volver" value="admin">
                 <button class="btn btn-danger" type="submit">Eliminar mascota</button>
             </form>
@@ -73,5 +75,6 @@
     if (label) label.textContent = file ? file.name : 'Ningún archivo seleccionado';
   });
 </script>
+<script th:src="@{/js/app.js}"></script>
 </body>
 </html>

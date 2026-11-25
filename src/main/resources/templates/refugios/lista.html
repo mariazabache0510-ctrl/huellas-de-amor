@@ -24,7 +24,10 @@
                     <p class="meta" th:text="${r.contacto} + ' · ' + ${r.telefono}"></p>
                     <div class="actions" sec:authorize="hasAnyRole('VOLUNTARIO','ADMIN')">
                         <a class="btn btn-secondary" th:href="@{/refugios/{id}/editar(id=${r.id})}">Editar</a>
-                        <form th:action="@{/refugios/{id}/eliminar(id=${r.id})}" method="post">
+                        <form th:action="@{/refugios/{id}/eliminar(id=${r.id})}" method="post"
+                              data-confirm="¿Segura de eliminar este refugio? Esta acción no se puede deshacer."
+                              data-confirm-title="Eliminar refugio"
+                              data-confirm-ok="Sí, eliminar">
                             <button class="btn btn-danger" type="submit">Eliminar</button>
                         </form>
                     </div>

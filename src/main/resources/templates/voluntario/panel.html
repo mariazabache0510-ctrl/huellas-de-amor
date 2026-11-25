@@ -63,7 +63,9 @@
                         <div class="actions" style="margin-top:0.75rem">
                             <a class="btn btn-secondary" th:href="@{/mascotas/gestionar/{id}/editar(id=${m.id})}">Editar</a>
                             <form th:action="@{/mascotas/gestionar/{id}/eliminar(id=${m.id})}" method="post"
-                                  onsubmit="return confirm('¿Eliminar esta mascota? Esta acción no se puede deshacer.');">
+                                  data-confirm="¿Segura de eliminar esta mascota? Se quitará del catálogo y no se puede deshacer."
+                                  data-confirm-title="Eliminar mascota"
+                                  data-confirm-ok="Sí, eliminar">
                                 <input type="hidden" name="volver" value="voluntario">
                                 <button class="btn btn-danger" type="submit">Eliminar</button>
                             </form>
