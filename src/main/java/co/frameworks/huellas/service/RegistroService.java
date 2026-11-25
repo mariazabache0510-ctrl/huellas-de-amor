@@ -26,17 +26,19 @@ public class RegistroService {
             throw new NegocioException("El correo ya está registrado");
         }
 
+        String username = dto.getUsername().trim();
+        String correo = dto.getCorreo().trim().toLowerCase();
         Usuario usuario = Usuario.builder()
-                .nombre(dto.getNombre())
-                .username(dto.getUsername())
-                .correo(dto.getCorreo())
+                .nombre(dto.getNombre().trim())
+                .username(username)
+                .correo(correo)
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .rol(Rol.ADOPTANTE)
-                .telefono(dto.getTelefono())
-                .direccion(dto.getDireccion())
-                .motivacion(dto.getMotivacion())
+                .telefono(dto.getTelefono() != null ? dto.getTelefono().trim() : null)
+                .direccion(dto.getDireccion().trim())
+                .motivacion(dto.getMotivacion().trim())
                 .tieneExperiencia(dto.isTieneExperiencia())
-                .vivienda(dto.getVivienda())
+                .vivienda(dto.getVivienda().trim())
                 .activo(true)
                 .build();
         usuarioRepository.save(usuario);

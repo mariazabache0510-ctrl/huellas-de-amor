@@ -714,8 +714,24 @@ tr:hover { background: rgba(47, 143, 107, 0.06); }
 .field-error {
   display: block;
   color: #8a2f2f;
-  font-size: 0.78rem;
-  margin-top: 0.35rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  margin-top: 0.4rem;
+}
+
+.field.has-error input,
+.field.has-error textarea,
+.field.has-error select {
+  border-color: #c45c5c;
+  background: #fff7f7;
+  box-shadow: 0 0 0 3px rgba(196, 92, 92, 0.15);
+}
+
+.check-line.has-error {
+  color: #8a2f2f;
+  outline: 1px solid #f2c4c4;
+  outline-offset: 4px;
+  border-radius: 10px;
 }
 
 .hint {

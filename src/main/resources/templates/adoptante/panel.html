@@ -8,6 +8,9 @@
         <h1 class="section-title">Hola, futuro hogar</h1>
         <p class="section-lead">Consulta mascotas disponibles, tu historial de solicitudes y seguimientos.</p>
         <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
+        <div th:if="${mostrarGuia}" class="alert alert-success">
+            Tip: revisa la <a th:href="@{/como-adoptar}">guía para primeros adoptantes</a> antes de enviar tu solicitud.
+        </div>
         <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
         <h2 class="section-title" style="font-size:1.8rem">Disponibles para ti</h2>

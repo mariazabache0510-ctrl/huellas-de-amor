@@ -14,7 +14,7 @@ public final class RegistroValidators {
     private static final Pattern USERNAME = Pattern.compile("^[a-zA-Z0-9._-]{4,30}$");
     private static final Pattern NOMBRE = Pattern.compile("^[\\p{L} .'-]{3,80}$");
     private static final Pattern EMAIL = Pattern.compile(
-            "^[A-Za-z0-9._%+-]+@(gmail\\.com|googlemail\\.com|hotmail\\.com|outlook\\.com|live\\.com|yahoo\\.com|yahoo\\.es|icloud\\.com|me\\.com|proton\\.me|protonmail\\.com|edu\\.co|unal\\.edu\\.co|huellasdeamor\\.com)$",
+            "^[A-Za-z0-9._%+-]+@(gmail\\.com|googlemail\\.com|hotmail\\.com|hotmail\\.es|outlook\\.com|outlook\\.es|live\\.com|yahoo\\.com|yahoo\\.es|icloud\\.com|me\\.com|mac\\.com|proton\\.me|protonmail\\.com|edu\\.co|[A-Za-z0-9.-]+\\.edu\\.co|huellasdeamor\\.com)$",
             Pattern.CASE_INSENSITIVE);
 
     private static final Set<String> OFENSIVOS = Set.of(

@@ -17,52 +17,55 @@
         <div class="auth-card auth-card-wide reveal">
             <div class="auth-card-glow"></div>
             <h2>Registro</h2>
-            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+            <div id="registroAlertas">
+                <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+            </div>
 
-            <form class="auth-form register-grid" th:action="@{/registro}" th:object="${registro}" method="post" novalidate>
-                <div class="field">
+            <form class="auth-form register-grid" th:action="@{/registro}" th:object="${registro}" method="post" novalidate
+                  id="formRegistro">
+                <div class="field" th:classappend="${#fields.hasErrors('nombre')} ? ' has-error'">
                     <label for="nombre">Nombre completo *</label>
                     <input id="nombre" th:field="*{nombre}" required minlength="3"
                            autocomplete="name" placeholder="Ej. Sofía Pérez">
                     <small class="field-error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
                 </div>
-                <div class="field">
+                <div class="field" th:classappend="${#fields.hasErrors('username')} ? ' has-error'">
                     <label for="username">Usuario *</label>
                     <input id="username" th:field="*{username}" required minlength="4"
                            autocomplete="username" placeholder="Ej. sofia.perez">
                     <small class="field-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
                 </div>
-                <div class="field">
+                <div class="field" th:classappend="${#fields.hasErrors('correo')} ? ' has-error'">
                     <label for="correo">Correo *</label>
                     <input id="correo" type="email" th:field="*{correo}" required
                            autocomplete="email" placeholder="Ej. sofia@gmail.com">
                     <small class="hint">Gmail, Outlook, Hotmail, Yahoo, iCloud, Proton o edu.co</small>
                     <small class="field-error" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></small>
                 </div>
-                <div class="field">
+                <div class="field" th:classappend="${#fields.hasErrors('password')} ? ' has-error'">
                     <label for="password">Contraseña segura *</label>
                     <input id="password" type="password" th:field="*{password}" required minlength="8"
-                           autocomplete="new-password" placeholder="Mínimo 8 caracteres">
-                    <small class="hint">Mayúscula, minúscula, número y símbolo.</small>
+                           autocomplete="new-password" placeholder="Ej. Huellas2026!">
+                    <small class="hint">Obligatorio: mínimo 8 caracteres, 1 mayúscula, 1 minúscula, 1 número y 1 símbolo (ej. ! @ #).</small>
                     <small class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
                 </div>
                 <div class="field">
                     <label for="telefono">Teléfono</label>
                     <input id="telefono" th:field="*{telefono}" autocomplete="tel" placeholder="Ej. 3001234567">
                 </div>
-                <div class="field">
+                <div class="field" th:classappend="${#fields.hasErrors('direccion')} ? ' has-error'">
                     <label for="direccion">Dirección *</label>
                     <input id="direccion" th:field="*{direccion}" required minlength="5"
                            autocomplete="street-address" placeholder="Barrio y ciudad">
                     <small class="field-error" th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}"></small>
                 </div>
-                <div class="field full">
+                <div class="field full" th:classappend="${#fields.hasErrors('motivacion')} ? ' has-error'">
                     <label for="motivacion">Motivación *</label>
                     <textarea id="motivacion" th:field="*{motivacion}" rows="3" required minlength="10"
                               placeholder="¿Por qué quieres adoptar?"></textarea>
                     <small class="field-error" th:if="${#fields.hasErrors('motivacion')}" th:errors="*{motivacion}"></small>
                 </div>
-                <div class="field full">
+                <div class="field full" th:classappend="${#fields.hasErrors('vivienda')} ? ' has-error'">
                     <label for="vivienda">Tipo de vivienda *</label>
                     <input id="vivienda" th:field="*{vivienda}" required
                            placeholder="Ej. Casa con patio / Apartamento">
@@ -85,7 +88,7 @@
                     </div>
                 </div>
 
-                <label class="check-line full">
+                <label class="check-line full" th:classappend="${#fields.hasErrors('aceptaTerminos')} ? ' has-error'">
                     <input type="checkbox" th:field="*{aceptaTerminos}" required>
                     <span>Acepto <a th:href="@{/terminos}" target="_blank">términos</a> y <a th:href="@{/privacidad}" target="_blank">privacidad</a> *</span>
                 </label>
@@ -100,5 +103,14 @@
 
 <div th:replace="~{fragments/layout :: footer}"></div>
 <script th:src="@{/js/app.js}"></script>
+<script>
+  (function () {
+    const alertas = document.getElementById('registroAlertas');
+    const primerError = document.querySelector('.field-error, .alert-error');
+    if (primerError) {
+      (alertas || primerError).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  })();
+</script>
 </body>
 </html>
